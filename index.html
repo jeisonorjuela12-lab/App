@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Esquiva — mi primer juego</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: #0d0d1a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    touch-action: none;
+  }
+  #juego {
+    display: block;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #16162e 0%, #0d0d1a 100%);
+  }
+  #ui {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    pointer-events: none;
+  }
+  #ui.oculto { display: none; }
+  #ui h1 { font-size: 2.4rem; margin-bottom: 8px; color: #7df9ff; }
+  #ui p { color: #aab; margin: 4px 0; }
+  #ui .puntaje-final { font-size: 1.6rem; color: #ffd166; margin: 12px 0; }
+  #ui button {
+    pointer-events: auto;
+    margin-top: 20px;
+    padding: 14px 40px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #0d0d1a;
+    background: #7df9ff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+  #ui button:active { transform: scale(0.95); }
+</style>
+</head>
+<body>
+
+<canvas id="juego"></canvas>
+
+<div id="ui">
+  <h1>ESQUIVA</h1>
+  <p id="mensaje">Mueve al jugador y esquiva los bloques que caen.</p>
+  <p>⬅️ ➡️ flechas del teclado, o toca/arrastra en el celular</p>
+  <p class="puntaje-final" id="puntajeFinal"></p>
+  <button id="botonJugar">JUGAR</button>
+</div>
+
+<script>
+// ============================================================
+// UN JUEGO TIENE 4 PIEZAS:
+//  1. ESTADO: variables que describen el mundo (posiciones, puntaje)
+//  2. ENTRADA: leer teclado / pantalla táctil
+//  3. ACTUALIZAR: mover todo un poquito (física, colisiones)
+//  4. DIBUJAR: pintar el estado en pantalla
+// El "game loop" repite actualizar + dibujar ~60 veces por segundo.
+// ============================================================
+
+const canvas = document.getElementById('juego');
+const ctx = canvas.getContext('2d');
+const ui = document.getElementById('ui');
+const mensaje = document.getElementById('mensaje');
+const puntajeFinal = document.getElementById('puntajeFinal');
+const botonJugar = document.getElementById('botonJugar');
+
+// --- 1. ESTADO ---------------------------------------------
+let ancho, alto;            // tamaño del canvas
+let jugador;                // { x, y, w, h }
+let bloques;                // lista de obstáculos que caen
+let particulas;             // efecto visual al chocar
+let puntaje, record;
+let velocidadCaida;         // sube con el tiempo = dificultad
+let tiempoUltimoBloque;
+let jugando = false;
+
+record = Number(localStorage.getItem('record') || 0);
+
+function ajustarTamano() {
+  // Canvas vertical tipo celular, centrado en cualquier pantalla
+  alto = window.innerHeight;
+  ancho = Math.min(window.innerWidth, alto * 0.6);
+  canvas.width = ancho;
+  canvas.height = alto;
+}
+window.addEventListener('resize', ajustarTamano);
+ajustarTamano();
+
+function reiniciar() {
+  jugador = { x: ancho / 2 - 20, y: alto - 90, w: 40, h: 40 };
+  bloques = [];
+  particulas = [];
+  puntaje = 0;
+  velocidadCaida = 3;
+  tiempoUltimoBloque = 0;
+  jugando = true;
+  ui.classList.add('oculto');
+  requestAnimationFrame(cicloDeJuego);
+}
+
+// --- 2. ENTRADA --------------------------------------------
+const teclas = {};
+window.addEventListener('keydown', e => teclas[e.key] = true);
+window.addEventListener('keyup', e => teclas[e.key] = false);
+
+// En táctil: el jugador sigue el dedo
+let destinoX = null;
+function moverConToque(e) {
+  const toque = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  destinoX = toque.clientX - rect.left - jugador.w / 2;
+}
+canvas.addEventListener('touchstart', moverConToque);
+canvas.addEventListener('touchmove', moverConToque);
+canvas.addEventListener('touchend', () => destinoX = null);
+
+// --- 3. ACTUALIZAR ------------------------------------------
+function actualizar(dt) {
+  // Mover jugador con teclado
+  const velocidadJugador = 0.45 * dt;
+  if (teclas['ArrowLeft'] || teclas['a']) jugador.x -= velocidadJugador;
+  if (teclas['ArrowRight'] || teclas['d']) jugador.x += velocidadJugador;
+
+  // Mover jugador hacia el dedo (suavizado)
+  if (destinoX !== null) jugador.x += (destinoX - jugador.x) * 0.25;
+
+  // No dejar que se salga de la pantalla
+  jugador.x = Math.max(0, Math.min(ancho - jugador.w, jugador.x));
+
+  // Crear bloques nuevos cada cierto tiempo (más rápido al subir puntaje)
+  tiempoUltimoBloque += dt;
+  const intervalo = Math.max(250, 800 - puntaje * 5);
+  if (tiempoUltimoBloque > intervalo) {
+    tiempoUltimoBloque = 0;
+    const w = 30 + Math.random() * 60;
+    bloques.push({
+      x: Math.random() * (ancho - w),
+      y: -40, w, h: 25,
+      color: `hsl(${Math.random() * 60 + 330}, 80%, 60%)`
+    });
+  }
+
+  // Mover bloques hacia abajo y detectar colisiones
+  velocidadCaida += dt * 0.0003; // la dificultad sube sola
+  for (let i = bloques.length - 1; i >= 0; i--) {
+    const b = bloques[i];
+    b.y += velocidadCaida * dt * 0.06;
+
+    // ¿Chocó con el jugador? (colisión de rectángulos)
+    if (b.x < jugador.x + jugador.w && b.x + b.w > jugador.x &&
+        b.y < jugador.y + jugador.h && b.y + b.h > jugador.y) {
+      explotar(jugador.x + jugador.w / 2, jugador.y + jugador.h / 2);
+      perder();
+      return;
+    }
+
+    // Si salió por abajo, se elimina y suma un punto
+    if (b.y > alto) {
+      bloques.splice(i, 1);
+      puntaje++;
+    }
+  }
+
+  // Animar partículas de la explosión
+  for (let i = particulas.length - 1; i >= 0; i--) {
+    const p = particulas[i];
+    p.x += p.vx * dt * 0.06;
+    p.y += p.vy * dt * 0.06;
+    p.vida -= dt;
+    if (p.vida <= 0) particulas.splice(i, 1);
+  }
+}
+
+function explotar(x, y) {
+  for (let i = 0; i < 30; i++) {
+    particulas.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 10,
+      vy: (Math.random() - 0.5) * 10,
+      vida: 600 + Math.random() * 400,
+      color: Math.random() > 0.5 ? '#7df9ff' : '#ffd166'
+    });
+  }
+}
+
+function perder() {
+  jugando = false;
+  if (puntaje > record) {
+    record = puntaje;
+    localStorage.setItem('record', record);
+  }
+  mensaje.textContent = '¡Te alcanzó un bloque!';
+  puntajeFinal.textContent = `Puntaje: ${puntaje} · Récord: ${record}`;
+  botonJugar.textContent = 'JUGAR OTRA VEZ';
+  // Dejar la explosión animándose un momento antes de mostrar el menú
+  setTimeout(() => ui.classList.remove('oculto'), 700);
+  requestAnimationFrame(animarFinal);
+}
+
+// --- 4. DIBUJAR ----------------------------------------------
+function dibujar() {
+  ctx.clearRect(0, 0, ancho, alto);
+
+  // Jugador (con un brillo para que se vea vivo)
+  if (jugando) {
+    ctx.shadowColor = '#7df9ff';
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#7df9ff';
+    ctx.fillRect(jugador.x, jugador.y, jugador.w, jugador.h);
+    ctx.shadowBlur = 0;
+  }
+
+  // Bloques
+  for (const b of bloques) {
+    ctx.fillStyle = b.color;
+    ctx.fillRect(b.x, b.y, b.w, b.h);
+  }
+
+  // Partículas
+  for (const p of particulas) {
+    ctx.globalAlpha = Math.max(0, p.vida / 1000);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, 5, 5);
+  }
+  ctx.globalAlpha = 1;
+
+  // Puntaje
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 28px Segoe UI, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(puntaje, ancho / 2, 50);
+}
+
+// --- EL GAME LOOP --------------------------------------------
+let tiempoAnterior = 0;
+function cicloDeJuego(tiempo) {
+  const dt = Math.min(tiempo - tiempoAnterior, 50); // milisegundos desde el frame anterior
+  tiempoAnterior = tiempo;
+  actualizar(dt);
+  if (!jugando) return;
+  dibujar();
+  requestAnimationFrame(cicloDeJuego);
+}
+
+// Tras perder, seguimos dibujando solo para que se vea la explosión
+function animarFinal(tiempo) {
+  const dt = Math.min(tiempo - tiempoAnterior, 50);
+  tiempoAnterior = tiempo;
+  for (let i = particulas.length - 1; i >= 0; i--) {
+    const p = particulas[i];
+    p.x += p.vx * dt * 0.06;
+    p.y += p.vy * dt * 0.06;
+    p.vida -= dt;
+    if (p.vida <= 0) particulas.splice(i, 1);
+  }
+  dibujar();
+  if (particulas.length > 0) requestAnimationFrame(animarFinal);
+}
+
+botonJugar.addEventListener('click', () => {
+  tiempoAnterior = performance.now();
+  reiniciar();
+});
+</script>
+</body>
+</html>
