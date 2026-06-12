@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>HÉROE DEL BARRIO — carrera de futbolista</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    min-height: 100%;
+    background: #0e1116;
+    color: #e8eaed;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .pantalla {
+    display: none;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+  .pantalla.activa { display: block; }
+  h1 { color: #4ade80; font-size: 1.9rem; margin-bottom: 4px; }
+  h2 { font-size: 1.3rem; margin-bottom: 12px; }
+  .sub { color: #9aa0a6; margin-bottom: 20px; }
+  button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 14px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0e1116;
+    background: #4ade80;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  button:active { transform: scale(0.98); }
+  button.secundario { background: #2a2f3a; color: #e8eaed; }
+  input {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.05rem;
+    background: #1a1f29;
+    color: #fff;
+    border: 1px solid #2a2f3a;
+    border-radius: 12px;
+  }
+  /* Barras de estadísticas */
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .stat { background: #1a1f29; border-radius: 12px; padding: 10px 12px; }
+  .stat .nombre { font-size: 0.78rem; color: #9aa0a6; text-transform: uppercase; }
+  .stat .barra { height: 8px; background: #2a2f3a; border-radius: 4px; margin-top: 6px; overflow: hidden; }
+  .stat .relleno { height: 100%; border-radius: 4px; transition: width 0.6s; }
+  /* Tarjetas de decisión */
+  .tarjeta {
+    background: #1a1f29;
+    border: 1px solid #2a2f3a;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 12px;
+    cursor: pointer;
+  }
+  .tarjeta:active { border-color: #4ade80; }
+  .tarjeta .titulo { font-weight: 700; font-size: 1.05rem; }
+  .tarjeta .detalle { color: #9aa0a6; font-size: 0.9rem; margin-top: 4px; }
+  /* Partido */
+  #lienzo { display: block; width: 100%; border-radius: 14px; background: #143018; touch-action: none; }
+  #narracion { min-height: 52px; padding: 12px 4px; font-size: 1.02rem; }
+  /* Feed de redes sociales */
+  .post {
+    background: #1a1f29;
+    border: 1px solid #2a2f3a;
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 10px;
+  }
+  .post .autor { font-weight: 700; }
+  .post .arroba { color: #9aa0a6; font-weight: 400; font-size: 0.88rem; }
+  .post .texto { margin-top: 6px; line-height: 1.4; }
+  .post .likes { color: #9aa0a6; font-size: 0.85rem; margin-top: 8px; }
+  .post.club { border-color: #facc15; }
+  .post.escandalo { border-color: #f87171; }
+  .marcador {
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 800;
+    background: #1a1f29;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 10px 0;
+  }
+  .aviso { background: #2a1f1f; border: 1px solid #f87171; border-radius: 12px; padding: 12px; margin-top: 12px; color: #fca5a5; }
+</style>
+</head>
+<body>
+
+<!-- ========== PANTALLA: INICIO ========== -->
+<div class="pantalla activa" id="p-inicio">
+  <h1>HÉROE DEL BARRIO</h1>
+  <p class="sub">De la cancha de tierra al estadio. Una temporada para demostrar quién eres: 10 partidos, una hinchada que opina de todo, y un club que no perdona.</p>
+  <input id="nombreInput" placeholder="Tu apellido de crack (ej: Orjuela)" maxlength="14">
+  <button onclick="iniciarCarrera()">EMPEZAR MI CARRERA</button>
+  <p class="sub" style="margin-top:16px">⚽ En los partidos: toca dónde quieres rematar y luego para la barra de precisión en el centro. El arquero estudia tus mañas: no remates siempre al mismo palo.</p>
+</div>
+
+<!-- ========== PANTALLA: SEMANA ========== -->
+<div class="pantalla" id="p-semana">
+  <h2 id="semanaTitulo"></h2>
+  <p class="sub" id="semanaRival"></p>
+  <div class="stats" id="statsSemana"></div>
+  <div id="avisoSemana"></div>
+  <p style="margin-top:16px; font-weight:600">¿Qué haces esta semana?</p>
+  <div class="tarjeta" onclick="elegirAccion('entrenar')">
+    <div class="titulo">🏃 Entrenar duro</div>
+    <div class="detalle">+ Forma, − Energía. El camino del profesional.</div>
+  </div>
+  <div class="tarjeta" onclick="elegirAccion('descansar')">
+    <div class="titulo">😴 Descansar y recuperarte</div>
+    <div class="detalle">+ Energía. Las piernas también juegan.</div>
+  </div>
+  <div class="tarjeta" onclick="elegirAccion('farra')">
+    <div class="titulo">🎉 Salir de farra</div>
+    <div class="detalle">+ Moral, − Forma y Energía. Y si te graban... problema.</div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: PARTIDO ========== -->
+<div class="pantalla" id="p-partido">
+  <h2 id="partidoTitulo"></h2>
+  <canvas id="lienzo"></canvas>
+  <div id="narracion"></div>
+  <button id="botonPartido" onclick="continuarPartido()">COMENZAR PARTIDO</button>
+</div>
+
+<!-- ========== PANTALLA: REDES SOCIALES ========== -->
+<div class="pantalla" id="p-redes">
+  <h2>📱 Después del partido...</h2>
+  <div class="marcador" id="marcadorFinal"></div>
+  <div id="feed"></div>
+  <button onclick="siguienteSemana()">SIGUIENTE SEMANA</button>
+</div>
+
+<!-- ========== PANTALLA: FIN DE TEMPORADA ========== -->
+<div class="pantalla" id="p-final">
+  <h2 id="finalTitulo"></h2>
+  <p class="sub" id="finalTexto"></p>
+  <div class="stats" id="statsFinal"></div>
+  <button onclick="location.reload()">JUGAR OTRA TEMPORADA</button>
+</div>
+
+<script>
+// ============================================================
+// HÉROE DEL BARRIO — prototipo v0
+// Simulador de carrera futbolística: decisiones semanales,
+// partidos jugables (minijuego de definición) y un mundo que
+// reacciona: hinchada en redes, presión del club y del DT.
+// ============================================================
+
+// ---------- ESTADO DE LA CARRERA ----------
+const TOTAL_PARTIDOS = 10;
+
+const RIVALES = [
+  'Deportivo Río', 'Atlético Norte', 'Águilas FC', 'Real Sabana',
+  'Tiburones del Puerto', 'Leones del Valle', 'Cumbia FC',
+  'Once de Oriente', 'Furia Capital', 'Titanes (final)'
+];
+
+let J = null; // el jugador y su mundo
+
+function iniciarCarrera() {
+  const nombre = document.getElementById('nombreInput').value.trim() || 'Orjuela';
+  J = {
+    nombre,
+    partido: 0,          // índice del próximo partido (0..9)
+    forma: 55,
+    energia: 80,
+    moral: 60,
+    reputacion: 40,      // qué tanto te quiere la hinchada
+    confianzaDT: 60,     // qué tanto te banca el club
+    goles: 0,
+    escandaloPendiente: false,
+    rachaPalo: { lado: null, veces: 0 } // el arquero te estudia
+  };
+  irA('p-semana');
+  pintarSemana();
+}
+
+function irA(id) {
+  document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
+  window.scrollTo(0, 0);
+}
+
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+function azar(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function elegir(lista) { return lista[Math.floor(Math.random() * lista.length)]; }
+
+// ---------- PANTALLA DE SEMANA ----------
+function pintarSemana() {
+  document.getElementById('semanaTitulo').textContent =
+    `Semana ${J.partido + 1} de ${TOTAL_PARTIDOS}`;
+  document.getElementById('semanaRival').textContent =
+    `Próximo rival: ${RIVALES[J.partido]} · Goles en la temporada: ${J.goles}`;
+  pintarStats('statsSemana');
+
+  const aviso = document.getElementById('avisoSemana');
+  if (J.confianzaDT < 30) {
+    aviso.innerHTML = `<div class="aviso">⚠️ El DT te llamó aparte: "O mejoras ya, o juega otro". Estás a un mal partido de la banca.</div>`;
+  } else if (J.energia < 30) {
+    aviso.innerHTML = `<div class="aviso">🦵 Tienes las piernas pesadas. Con esta energía vas a llegar tarde a las jugadas.</div>`;
+  } else {
+    aviso.innerHTML = '';
+  }
+}
+
+function pintarStats(idContenedor) {
+  const defs = [
+    ['Forma', J.forma, '#4ade80'],
+    ['Energía', J.energia, '#60a5fa'],
+    ['Moral', J.moral, '#facc15'],
+    ['Hinchada', J.reputacion, '#f472b6'],
+    ['Confianza DT', J.confianzaDT, '#fb923c'],
+    ['Goles', null, null]
+  ];
+  document.getElementById(idContenedor).innerHTML = defs.map(([n, v, c]) =>
+    v === null
+      ? `<div class="stat"><div class="nombre">${n}</div><div style="font-size:1.4rem;font-weight:800;margin-top:2px">${J.goles} ⚽</div></div>`
+      : `<div class="stat"><div class="nombre">${n}</div>
+           <div class="barra"><div class="relleno" style="width:${v}%;background:${c}"></div></div>
+         </div>`
+  ).join('');
+}
+
+function elegirAccion(accion) {
+  if (accion === 'entrenar') {
+    J.forma = clamp(J.forma + azar(8, 14));
+    J.energia = clamp(J.energia - azar(10, 16));
+  } else if (accion === 'descansar') {
+    J.energia = clamp(J.energia + azar(15, 25));
+    J.forma = clamp(J.forma - 3); // sin entrenar, la forma se oxida un poco
+  } else if (accion === 'farra') {
+    J.moral = clamp(J.moral + azar(12, 20));
+    J.forma = clamp(J.forma - azar(8, 14));
+    J.energia = clamp(J.energia - azar(12, 20));
+    if (Math.random() < 0.4) J.escandaloPendiente = true; // te grabaron...
+  }
+  prepararPartido();
+}
+
+// ---------- EL PARTIDO ----------
+// El partido se vive en "momentos clave": oportunidades de gol que
+// dependen de tu forma. Cada una es el minijuego de definición.
+let P = null; // estado del partido en curso
+
+function prepararPartido() {
+  let oportunidades = 2;
+  if (J.forma >= 55) oportunidades++;
+  if (J.forma >= 85) oportunidades++;
+  if (J.energia < 30) oportunidades = Math.max(1, oportunidades - 1);
+
+  P = {
+    rival: RIVALES[J.partido],
+    dificultad: J.partido,               // el arquero mejora cada fecha
+    oportunidades,
+    jugada: 0,
+    golesMios: 0,
+    fallos: 0,
+    minutos: generarMinutos(oportunidades),
+    fase: 'previa'                        // previa | esperando | apuntar | potencia | animando | final
+  };
+
+  document.getElementById('partidoTitulo').textContent =
+    `Fecha ${J.partido + 1}: vs ${P.rival}`;
+  document.getElementById('narracion').textContent =
+    J.energia < 30
+      ? 'Sales a la cancha con las piernas pesadas. Hoy tendrás pocas llegadas: no las desperdicies.'
+      : `El estadio está lleno. Tu forma te dará ${oportunidades} llegadas claras hoy.`;
+  document.getElementById('botonPartido').style.display = 'block';
+  document.getElementById('botonPartido').textContent = 'COMENZAR PARTIDO';
+  irA('p-partido');
+  ajustarLienzo();
+  dibujarEscena();
+}
+
+function generarMinutos(n) {
+  const m = [];
+  while (m.length < n) {
+    const x = azar(4, 90);
+    if (!m.includes(x)) m.push(x);
+  }
+  return m.sort((a, b) => a - b);
+}
+
+function continuarPartido() {
+  if (P.jugada < P.oportunidades) {
+    iniciarOportunidad();
+  } else {
+    terminarPartido();
+  }
+}
+
+function iniciarOportunidad() {
+  document.getElementById('narracion').textContent =
+    `⏱️ Minuto ${P.minutos[P.jugada]}: ¡quedas mano a mano! Toca dónde rematar.`;
+  document.getElementById('botonPartido').style.display = 'none';
+  P.fase = 'apuntar';
+  dibujarEscena();
+}
+
+// ---------- MINIJUEGO DE DEFINICIÓN (canvas) ----------
+const lienzo = document.getElementById('lienzo');
+const ctx = lienzo.getContext('2d');
+let G = {}; // geometría del arco, recalculada al ajustar tamaño
+
+function ajustarLienzo() {
+  const w = Math.min(window.innerWidth - 32, 488);
+  lienzo.width = w;
+  lienzo.height = Math.round(w * 0.72);
+  const aw = w * 0.8;                    // ancho del arco
+  G = {
+    arcoX: (w - aw) / 2, arcoY: lienzo.height * 0.14,
+    arcoW: aw, arcoH: lienzo.height * 0.42,
+    bolaX: w / 2, bolaY: lienzo.height - 36,
+    barraY: lienzo.height - 14, barraW: w * 0.7
+  };
+}
+window.addEventListener('resize', () => { ajustarLienzo(); if (P) dibujarEscena(); });
+
+let objetivo = null;       // dónde apuntaste
+let barraPos = 0, barraDir = 1, barraAnim = null;
+let bola = null, arquero = null;
+
+lienzo.addEventListener('pointerdown', e => {
+  if (!P) return;
+  const r = lienzo.getBoundingClientRect();
+  const x = (e.clientX - r.left) * (lienzo.width / r.width);
+  const y = (e.clientY - r.top) * (lienzo.height / r.height);
+
+  if (P.fase === 'apuntar') {
+    // Solo cuenta si tocas dentro del arco
+    if (x < G.arcoX || x > G.arcoX + G.arcoW || y < G.arcoY || y > G.arcoY + G.arcoH) return;
+    objetivo = { x, y };
+    P.fase = 'potencia';
+    barraPos = 0; barraDir = 1;
+    animarBarra();
+  } else if (P.fase === 'potencia') {
+    cancelAnimationFrame(barraAnim);
+    ejecutarRemate();
+  }
+});
+
+function animarBarra() {
+  // La barra va más rápido si estás cansado o el rival es duro
+  const velocidad = 0.022 + P.dificultad * 0.0035 + (J.energia < 40 ? 0.012 : 0);
+  barraPos += barraDir * velocidad;
+  if (barraPos >= 1) { barraPos = 1; barraDir = -1; }
+  if (barraPos <= 0) { barraPos = 0; barraDir = 1; }
+  dibujarEscena();
+  barraAnim = requestAnimationFrame(animarBarra);
+}
+
+function ejecutarRemate() {
+  P.fase = 'animando';
+
+  // --- Precisión: qué tan lejos cae el balón de donde apuntaste ---
+  const falloTiming = Math.abs(barraPos - 0.5) * 2;            // 0 = perfecto
+  const errorPx = (G.arcoW / 22)
+    + falloTiming * (G.arcoW / 5)
+    + (100 - J.forma) * (G.arcoW / 900)
+    + (100 - J.moral) * (G.arcoW / 1800);
+  const ang = Math.random() * Math.PI * 2;
+  const destino = {
+    x: objetivo.x + Math.cos(ang) * errorPx * Math.random(),
+    y: objetivo.y + Math.sin(ang) * errorPx * Math.random()
+  };
+
+  // ¿Se fue afuera?
+  const afuera = destino.x < G.arcoX || destino.x > G.arcoX + G.arcoW ||
+                 destino.y < G.arcoY || destino.y > G.arcoY + G.arcoH;
+
+  // --- El arquero: se lanza, y aprende si repites palo ---
+  const centro = G.arcoX + G.arcoW / 2;
+  const lado = objetivo.x < centro ? 'izq' : 'der';
+  if (lado === J.rachaPalo.lado) J.rachaPalo.veces++;
+  else J.rachaPalo = { lado, veces: 1 };
+
+  let pLectura = 0.28 + P.dificultad * 0.045 + (J.rachaPalo.veces - 1) * 0.18;
+  pLectura = Math.min(0.9, pLectura);
+  const leyo = Math.random() < pLectura;
+  const arqX = leyo
+    ? destino.x + (Math.random() - 0.5) * G.arcoW * 0.1
+    : centro + (lado === 'izq' ? 1 : -1) * G.arcoW * (0.15 + Math.random() * 0.2);
+  const alcance = G.arcoW * (0.085 + P.dificultad * 0.006);
+  const atajo = !afuera && Math.abs(arqX - destino.x) < alcance &&
+                destino.y > G.arcoY + G.arcoH * 0.18; // los ángulos altos no los alcanza
+
+  arquero = { x: centro, destinoX: arqX };
+  bola = { x: G.bolaX, y: G.bolaY, destino, t: 0 };
+
+  animarRemate(afuera ? 'afuera' : (atajo ? 'atajado' : 'gol'));
+}
+
+function animarRemate(resultado) {
+  bola.t += 0.06;
+  const t = Math.min(1, bola.t);
+  bola.x = G.bolaX + (bola.destino.x - G.bolaX) * t;
+  bola.y = G.bolaY + (bola.destino.y - G.bolaY) * t - Math.sin(t * Math.PI) * 30;
+  arquero.x += (arquero.destinoX - arquero.x) * 0.12;
+  dibujarEscena();
+
+  if (t < 1) { requestAnimationFrame(() => animarRemate(resultado)); return; }
+
+  // Resolver la jugada
+  const n = document.getElementById('narracion');
+  if (resultado === 'gol') {
+    P.golesMios++; J.goles++;
+    n.textContent = elegir([
+      `⚽ ¡GOOOL! ¡${J.nombre} la mandó a guardar! El estadio se viene abajo.`,
+      `⚽ ¡GOLAZO de ${J.nombre}! El arquero ni la vio.`,
+      `⚽ ¡GOL! Definición fría, de crack.`
+    ]);
+  } else if (resultado === 'atajado') {
+    P.fallos++;
+    n.textContent = J.rachaPalo.veces > 1
+      ? `🧤 ¡Atajada! El arquero ya te tenía leído: era el ${J.rachaPalo.veces}º remate al mismo palo.`
+      : '🧤 ¡Atajadón del arquero! Te ahogó el grito.';
+  } else {
+    P.fallos++;
+    n.textContent = elegir([
+      '😖 ¡Afuera! La tiraste a las nubes. Se escuchan silbidos.',
+      '😖 ¡Al palo y afuera! Tan cerca y tan lejos.'
+    ]);
+  }
+
+  P.jugada++;
+  P.fase = 'esperando';
+  const b = document.getElementById('botonPartido');
+  b.style.display = 'block';
+  b.textContent = P.jugada < P.oportunidades ? 'SEGUIR JUGANDO' : 'PITAZO FINAL';
+}
+
+function dibujarEscena() {
+  const w = lienzo.width, h = lienzo.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // Tribuna y césped
+  ctx.fillStyle = '#1f2937';
+  ctx.fillRect(0, 0, w, G.arcoY + G.arcoH * 0.5);
+  ctx.fillStyle = '#19381f';
+  ctx.fillRect(0, G.arcoY + G.arcoH * 0.5, w, h);
+  ctx.fillStyle = '#1e4426';
+  for (let i = 0; i < 5; i++) ctx.fillRect(0, G.arcoY + G.arcoH * 0.5 + i * 34, w, 17);
+
+  // Arco
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(G.arcoX, G.arcoY, G.arcoW, G.arcoH);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; // la red
+  for (let i = 1; i < 10; i++) {
+    ctx.beginPath();
+    ctx.moveTo(G.arcoX + (G.arcoW / 10) * i, G.arcoY);
+    ctx.lineTo(G.arcoX + (G.arcoW / 10) * i, G.arcoY + G.arcoH);
+    ctx.stroke();
+  }
+
+  // Arquero (un rectángulo con guantes, esto es un prototipo 😄)
+  const ax = arquero && P.fase !== 'apuntar' && P.fase !== 'potencia'
+    ? arquero.x : G.arcoX + G.arcoW / 2;
+  ctx.fillStyle = '#facc15';
+  ctx.fillRect(ax - 13, G.arcoY + G.arcoH * 0.35, 26, G.arcoH * 0.62);
+  ctx.beginPath();
+  ctx.arc(ax, G.arcoY + G.arcoH * 0.28, 11, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Mira donde apuntaste
+  if (objetivo && (P.fase === 'potencia' || P.fase === 'animando')) {
+    ctx.strokeStyle = '#f87171';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(objetivo.x, objetivo.y, 12, 0, Math.PI * 2);
+    ctx.moveTo(objetivo.x - 18, objetivo.y); ctx.lineTo(objetivo.x + 18, objetivo.y);
+    ctx.moveTo(objetivo.x, objetivo.y - 18); ctx.lineTo(objetivo.x, objetivo.y + 18);
+    ctx.stroke();
+  }
+
+  // Balón
+  const bx = bola && P.fase === 'animando' ? bola.x : G.bolaX;
+  const by = bola && P.fase === 'animando' ? bola.y : G.bolaY;
+  if (P && P.fase !== 'previa') {
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(bx, by, 9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#333';
+    ctx.stroke();
+  }
+
+  // Barra de precisión
+  if (P && P.fase === 'potencia') {
+    const bx0 = (w - G.barraW) / 2;
+    ctx.fillStyle = '#2a2f3a';
+    ctx.fillRect(bx0, G.barraY - 8, G.barraW, 12);
+    ctx.fillStyle = '#4ade80'; // zona perfecta al centro
+    ctx.fillRect(bx0 + G.barraW * 0.44, G.barraY - 8, G.barraW * 0.12, 12);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(bx0 + G.barraW * barraPos - 3, G.barraY - 12, 6, 20);
+  }
+}
+
+// ---------- RESULTADO Y CONSECUENCIAS ----------
+function terminarPartido() {
+  // Goles de los compañeros y del rival (el rival mejora con las fechas)
+  const golesEquipo = P.golesMios + azar(0, 2);
+  const golesRival = azar(0, 1 + Math.floor(P.dificultad / 3));
+  const gano = golesEquipo > golesRival;
+  const empato = golesEquipo === golesRival;
+
+  // Tu calificación del partido (1 a 10)
+  let nota = 5 + P.golesMios * 2 - P.fallos * 0.8 + (gano ? 1 : (empato ? 0 : -1));
+  nota = Math.max(1, Math.min(10, Math.round(nota * 10) / 10));
+
+  P.resultado = { golesEquipo, golesRival, gano, empato, nota };
+
+  // Consecuencias en reputación y confianza del DT
+  let dRep, dDT;
+  if (nota >= 8)      { dRep = 14; dDT = 12; }
+  else if (nota >= 6) { dRep = 6;  dDT = 6; }
+  else if (nota >= 4.5) { dRep = -4; dDT = -5; }
+  else                { dRep = -12; dDT = -14; }
+  if (J.escandaloPendiente) dRep -= 8;
+
+  J.reputacion = clamp(J.reputacion + dRep);
+  J.confianzaDT = clamp(J.confianzaDT + dDT);
+  J.moral = clamp(J.moral + (nota >= 6 ? 8 : -10));
+  J.energia = clamp(J.energia - 12); // jugar cansa
+
+  pintarRedes();
+  irA('p-redes');
+}
+
+// ---------- EL FEED: LA GENTE OPINA ----------
+const HINCHAS = [
+  ['Don Próspero', 'donprospero_dt'], ['La Cumbiamba', 'cumbiamba_sur'],
+  ['Hincha de Tribuna', 'tribuna_norte'], ['Marta del Barrio', 'martica_10'],
+  ['El Pibe Análisis', 'pibe_analisis'], ['Radio La Jugada', 'radiolajugada'],
+  ['Comando Verde', 'comandoverde'], ['Doña Fútbol', 'donafutbol']
+];
+
+const COMENTARIOS = {
+  brillante: [
+    '¡{n} ES UN CRACK! Ese muchacho nos va a llevar a la gloria 🙌⚽',
+    'Lo de {n} hoy fue de otro planeta. Véndanlo todo, pero a él NO.',
+    '{n} jugando así y todavía hay gente que lo critica. RESPETO.',
+    'Yo lo dije primero: {n} a la selección YA. 🇨🇴'
+  ],
+  bueno: [
+    'Buen partido de {n}. Si sigue así, llega lejos.',
+    '{n} cumplió hoy. Sólido el pelado.',
+    'Me gustó {n}, aunque le falta un poquito más de frialdad en el área.'
+  ],
+  regular: [
+    '{n} hoy estuvo desaparecido... ¿alguien lo vio en la cancha?',
+    'No sé, {n} promete mucho pero hoy no mostró nada.',
+    'A {n} le está quedando grande la camiseta. Ojalá me equivoque.'
+  ],
+  malo: [
+    '¿{n}? Pésimo. Esas oportunidades NO se fallan a este nivel. 😤',
+    'Que devuelvan la plata. Lo de {n} hoy fue una vergüenza.',
+    '{n} debería pedir disculpas a la hinchada. Así de simple.',
+    'Yo no soy DT pero hasta mi abuela define mejor que {n}.'
+  ],
+  escandalo: [
+    '🚨 VIDEO: {n} de fiesta hasta las 4am a DOS DÍAS del partido. ¿Así quería rendir?',
+    '🚨 Filtran fotos de {n} en una farra entre semana. El club "está al tanto".'
+  ]
+};
+
+function pintarRedes() {
+  const r = P.resultado;
+  document.getElementById('marcadorFinal').innerHTML =
+    `Mi equipo ${r.golesEquipo} – ${r.golesRival} ${P.rival}<br>
+     <span style="font-size:0.95rem;color:#9aa0a6">Tu calificación: ${r.nota} / 10 · Goles tuyos: ${P.golesMios}</span>`;
+
+  const tono = r.nota >= 8 ? 'brillante' : r.nota >= 6 ? 'bueno' : r.nota >= 4.5 ? 'regular' : 'malo';
+  let html = '';
+
+  // El escándalo de la farra sale primero, si te grabaron
+  if (J.escandaloPendiente) {
+    html += post('Chisme Deportivo', 'chismedeportivo', elegir(COMENTARIOS.escandalo), azar(800, 4000), 'escandalo');
+    J.escandaloPendiente = false;
+  }
+
+  // 3 o 4 opiniones de la gente
+  const usados = new Set();
+  for (let i = 0; i < azar(3, 4); i++) {
+    let h;
+    do { h = elegir(HINCHAS); } while (usados.has(h[1]));
+    usados.add(h[1]);
+    // Con mala reputación, hasta los buenos partidos reciben algún palo
+    let lista = COMENTARIOS[tono];
+    if (J.reputacion < 30 && tono !== 'malo' && Math.random() < 0.4) lista = COMENTARIOS.regular;
+    html += post(h[0], h[1], elegir(lista), azar(15, 900));
+  }
+
+  // El mensaje del club, que es el que de verdad pesa
+  let club;
+  if (J.confianzaDT < 25) {
+    club = `Comunicado: el cuerpo técnico evalúa cambios en la titular. El rendimiento de ${J.nombre} "está en observación".`;
+  } else if (r.nota >= 8) {
+    club = `El DT en rueda de prensa: "${J.nombre} es el presente y el futuro de este club. Hoy lo demostró".`;
+  } else if (r.nota < 4.5) {
+    club = `El DT, serio: "Acá nadie tiene el puesto comprado. ${J.nombre} sabe que esto es rendimiento, no nombre".`;
+  } else {
+    club = `El club valora el esfuerzo del equipo. Sobre ${J.nombre}: "va por buen camino, pero puede dar más".`;
+  }
+  html += post('⚽ Club Oficial', 'cluboficial', club, azar(2000, 9000), 'club');
+
+  document.getElementById('feed').innerHTML = html;
+}
+
+function post(autor, arroba, texto, likes, clase = '') {
+  return `<div class="post ${clase}">
+    <span class="autor">${autor}</span> <span class="arroba">@${arroba}</span>
+    <div class="texto">${texto.replaceAll('{n}', J.nombre)}</div>
+    <div class="likes">❤️ ${likes.toLocaleString('es-CO')} · 🔁 ${Math.floor(likes / 4)}</div>
+  </div>`;
+}
+
+// ---------- AVANZAR LA TEMPORADA ----------
+function siguienteSemana() {
+  J.partido++;
+
+  // Si el DT perdió la paciencia, la carrera termina antes
+  if (J.confianzaDT <= 5) { finTemporada('despedido'); return; }
+  if (J.partido >= TOTAL_PARTIDOS) { finTemporada(); return; }
+
+  pintarSemana();
+  irA('p-semana');
+}
+
+function finTemporada(forzado) {
+  let titulo, texto;
+  if (forzado === 'despedido') {
+    titulo = '📉 Rescindieron tu contrato';
+    texto = `El club no aguantó más. Te vas con ${J.goles} goles y una lección: en el fútbol profesional la paciencia se acaba rápido. La próxima temporada será tu revancha.`;
+  } else if (J.goles >= 12 && J.reputacion >= 70) {
+    titulo = '🌟 ¡TE FICHÓ UN CLUB EUROPEO!';
+    texto = `${J.goles} goles, la hinchada coreando tu nombre y un cazatalentos en la tribuna. ${J.nombre}, te vas para Europa. Del barrio al mundo.`;
+  } else if (J.goles >= 7 && J.confianzaDT >= 50) {
+    titulo = '✅ Renovaste contrato';
+    texto = `Buena temporada: ${J.goles} goles. No fue para Europa todavía, pero el club te quiere y la hinchada empieza a creer. El año entrante puede ser EL año.`;
+  } else {
+    titulo = '😐 Temporada para el olvido';
+    texto = `${J.goles} goles. Sobreviviste, pero nadie te recordará por esto. El fútbol da revanchas: entrena más, cuida la energía y no le regales remates al arquero.`;
+  }
+
+  const record = Number(localStorage.getItem('heroeRecord') || 0);
+  if (J.goles > record) localStorage.setItem('heroeRecord', J.goles);
+
+  document.getElementById('finalTitulo').textContent = titulo;
+  document.getElementById('finalTexto').textContent =
+    texto + ` (Tu récord histórico: ${Math.max(record, J.goles)} goles en una temporada.)`;
+  pintarStats('statsFinal');
+  irA('p-final');
+}
+</script>
+</body>
+</html>

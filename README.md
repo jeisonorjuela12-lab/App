@@ -1,7 +1,27 @@
-# Esquiva — mi primer juego
+# Juegos del repo
 
-Un juego arcade completo en **un solo archivo HTML**, sin motores ni librerías.
-Sirve como ejemplo de las piezas que tiene cualquier juego por dentro.
+Dos juegos completos, cada uno en **un solo archivo HTML**, sin motores ni
+librerías. Se abren con doble clic en cualquier navegador.
+
+## ⚽ Héroe del Barrio (`heroe.html`)
+
+Prototipo v0 de un simulador de carrera futbolística:
+
+- **Decisiones semanales**: entrenar, descansar o salir de farra. Cada una
+  mueve tu forma, energía y moral — y la farra puede terminar en escándalo.
+- **Partidos jugables**: tus oportunidades de gol se juegan en un minijuego de
+  definición (apuntas dónde rematar y paras la barra de precisión). El arquero
+  mejora cada fecha y **te estudia**: si remates siempre al mismo palo, te lee.
+- **El mundo reacciona**: después de cada partido, la hinchada opina en un feed
+  de redes sociales — te idolatra o te destroza según tu calificación — y el
+  club presiona: si el DT pierde la confianza, te rescinden el contrato.
+- **Finales distintos**: fichaje europeo, renovación, temporada para el olvido
+  o despido, según tus goles, tu reputación y la confianza del DT.
+
+# Esquiva (`index.html`) — mi primer juego
+
+Un juego arcade mínimo que muestra las piezas que tiene cualquier juego por
+dentro.
 
 ## Cómo jugarlo
 
