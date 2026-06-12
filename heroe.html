@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>HÉROE DEL BARRIO — carrera de futbolista</title>
+<title>HÉROE DEL BARRIO — v1</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
@@ -11,129 +11,128 @@
     background: #0e1116;
     color: #e8eaed;
     font-family: 'Segoe UI', system-ui, sans-serif;
+    overscroll-behavior: none;
   }
-  .pantalla {
-    display: none;
-    max-width: 520px;
-    margin: 0 auto;
-    padding: 24px 16px 60px;
-  }
+  .pantalla { display: none; max-width: 520px; margin: 0 auto; padding: 20px 14px 60px; }
   .pantalla.activa { display: block; }
-  h1 { color: #4ade80; font-size: 1.9rem; margin-bottom: 4px; }
-  h2 { font-size: 1.3rem; margin-bottom: 12px; }
-  .sub { color: #9aa0a6; margin-bottom: 20px; }
+  h1 { color: #4ade80; font-size: 1.8rem; }
+  h2 { font-size: 1.25rem; margin-bottom: 10px; }
+  .sub { color: #9aa0a6; margin: 8px 0 16px; line-height: 1.45; }
   button {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    margin-top: 14px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #0e1116;
-    background: #4ade80;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
+    display: block; width: 100%; padding: 13px; margin-top: 12px;
+    font-size: 1.02rem; font-weight: 700; color: #0e1116;
+    background: #4ade80; border: none; border-radius: 12px; cursor: pointer;
   }
   button:active { transform: scale(0.98); }
   button.secundario { background: #2a2f3a; color: #e8eaed; }
-  input {
-    width: 100%;
-    padding: 14px;
-    font-size: 1.05rem;
-    background: #1a1f29;
-    color: #fff;
-    border: 1px solid #2a2f3a;
-    border-radius: 12px;
-  }
-  /* Barras de estadísticas */
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
-  .stat { background: #1a1f29; border-radius: 12px; padding: 10px 12px; }
-  .stat .nombre { font-size: 0.78rem; color: #9aa0a6; text-transform: uppercase; }
+  input { width: 100%; padding: 13px; font-size: 1.02rem; background: #1a1f29; color: #fff; border: 1px solid #2a2f3a; border-radius: 12px; }
+  .fila { display: flex; gap: 8px; }
+  .fila > * { flex: 1; }
+  .piel { height: 46px; border-radius: 12px; border: 3px solid transparent; cursor: pointer; margin-top: 12px; }
+  .piel.activa { border-color: #4ade80; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
+  .stat { background: #1a1f29; border-radius: 12px; padding: 9px 11px; }
+  .stat .nombre { font-size: 0.74rem; color: #9aa0a6; text-transform: uppercase; }
   .stat .barra { height: 8px; background: #2a2f3a; border-radius: 4px; margin-top: 6px; overflow: hidden; }
   .stat .relleno { height: 100%; border-radius: 4px; transition: width 0.6s; }
-  /* Tarjetas de decisión */
-  .tarjeta {
-    background: #1a1f29;
-    border: 1px solid #2a2f3a;
-    border-radius: 14px;
-    padding: 16px;
-    margin-top: 12px;
-    cursor: pointer;
-  }
+  .tarjeta { background: #1a1f29; border: 1px solid #2a2f3a; border-radius: 14px; padding: 14px; margin-top: 10px; cursor: pointer; }
   .tarjeta:active { border-color: #4ade80; }
-  .tarjeta .titulo { font-weight: 700; font-size: 1.05rem; }
-  .tarjeta .detalle { color: #9aa0a6; font-size: 0.9rem; margin-top: 4px; }
-  /* Partido */
+  .tarjeta .titulo { font-weight: 700; }
+  .tarjeta .detalle { color: #9aa0a6; font-size: 0.88rem; margin-top: 3px; }
+  .tarjeta.agotada { opacity: 0.45; pointer-events: none; }
+  details { background: #1a1f29; border-radius: 14px; padding: 12px 14px; margin-top: 12px; }
+  summary { font-weight: 700; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.88rem; }
+  td, th { padding: 5px 4px; text-align: left; border-bottom: 1px solid #2a2f3a; }
+  tr.mio td { color: #4ade80; font-weight: 700; }
   #lienzo { display: block; width: 100%; border-radius: 14px; background: #143018; touch-action: none; }
-  #narracion { min-height: 52px; padding: 12px 4px; font-size: 1.02rem; }
-  /* Feed de redes sociales */
-  .post {
-    background: #1a1f29;
-    border: 1px solid #2a2f3a;
-    border-radius: 14px;
-    padding: 14px;
-    margin-top: 10px;
-  }
+  #hud { display: flex; justify-content: space-between; font-size: 0.92rem; padding: 8px 2px; color: #9aa0a6; }
+  #narracion { min-height: 46px; padding: 10px 4px; font-size: 1rem; }
+  .post { background: #1a1f29; border: 1px solid #2a2f3a; border-radius: 14px; padding: 13px; margin-top: 10px; }
   .post .autor { font-weight: 700; }
-  .post .arroba { color: #9aa0a6; font-weight: 400; font-size: 0.88rem; }
-  .post .texto { margin-top: 6px; line-height: 1.4; }
-  .post .likes { color: #9aa0a6; font-size: 0.85rem; margin-top: 8px; }
+  .post .arroba { color: #9aa0a6; font-weight: 400; font-size: 0.86rem; }
+  .post .texto { margin-top: 5px; line-height: 1.4; }
+  .post .likes { color: #9aa0a6; font-size: 0.83rem; margin-top: 7px; }
   .post.club { border-color: #facc15; }
   .post.escandalo { border-color: #f87171; }
-  .marcador {
-    text-align: center;
-    font-size: 1.7rem;
-    font-weight: 800;
-    background: #1a1f29;
-    border-radius: 14px;
-    padding: 14px;
-    margin: 10px 0;
+  .marcador { text-align: center; font-size: 1.5rem; font-weight: 800; background: #1a1f29; border-radius: 14px; padding: 13px; margin: 10px 0; }
+  .aviso { background: #2a1f1f; border: 1px solid #f87171; border-radius: 12px; padding: 11px; margin-top: 10px; color: #fca5a5; font-size: 0.92rem; }
+  .plata { background: #1f2a1f; border: 1px solid #4ade80; border-radius: 12px; padding: 11px; margin-top: 10px; font-weight: 700; }
+  /* Diálogos de historia */
+  #dialogo {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 50;
   }
-  .aviso { background: #2a1f1f; border: 1px solid #f87171; border-radius: 12px; padding: 12px; margin-top: 12px; color: #fca5a5; }
+  #dialogo .caja {
+    position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%);
+    width: min(94vw, 500px); background: #1a1f29;
+    border: 1px solid #4ade80; border-radius: 16px; padding: 18px;
+  }
+  #dialogo .quien { font-weight: 800; color: #4ade80; margin-bottom: 6px; }
+  #dialogo .quien .cara { font-size: 1.5rem; margin-right: 6px; }
+  #dialogo .texto { line-height: 1.5; }
+  #dialogo .pista { color: #9aa0a6; font-size: 0.8rem; margin-top: 12px; text-align: right; }
 </style>
 </head>
 <body>
 
-<!-- ========== PANTALLA: INICIO ========== -->
+<!-- ===== CREAR JUGADOR ===== -->
 <div class="pantalla activa" id="p-inicio">
   <h1>HÉROE DEL BARRIO</h1>
-  <p class="sub">De la cancha de tierra al estadio. Una temporada para demostrar quién eres: 10 partidos, una hinchada que opina de todo, y un club que no perdona.</p>
-  <input id="nombreInput" placeholder="Tu apellido de crack (ej: Orjuela)" maxlength="14">
-  <button onclick="iniciarCarrera()">EMPEZAR MI CARRERA</button>
-  <p class="sub" style="margin-top:16px">⚽ En los partidos: toca dónde quieres rematar y luego para la barra de precisión en el centro. El arquero estudia tus mañas: no remates siempre al mismo palo.</p>
+  <p class="sub">Eres el goleador de los picaditos del barrio. Hoy un empresario vino a verte jugar. Empieza tu historia: una temporada, 10 clubes, una hinchada que no perdona y una mamá que te espera con la cena.</p>
+  <input id="nombreInput" placeholder="Tu apellido (ej: Orjuela)" maxlength="14">
+  <p class="sub" style="margin-bottom:0">Elige tu tono de piel:</p>
+  <div class="fila" id="pieles">
+    <div class="piel activa" style="background:#8d5524" onclick="elegirPiel(0)"></div>
+    <div class="piel" style="background:#c68642" onclick="elegirPiel(1)"></div>
+    <div class="piel" style="background:#f1c27d" onclick="elegirPiel(2)"></div>
+  </div>
+  <button onclick="iniciarCarrera()">EMPEZAR MI HISTORIA</button>
+  <p class="sub">🎮 En la cancha: <b>arrastra el dedo</b> para correr con la pelota, <b>toca un compañero</b> para dársela (te la devuelve cuando te desmarques), y <b>toca el arco</b> para rematar. Si un defensa te alcanza, te la quita.</p>
 </div>
 
-<!-- ========== PANTALLA: SEMANA ========== -->
+<!-- ===== SEMANA / HUB ===== -->
 <div class="pantalla" id="p-semana">
   <h2 id="semanaTitulo"></h2>
-  <p class="sub" id="semanaRival"></p>
+  <p class="sub" id="semanaRival" style="margin-bottom:6px"></p>
+  <div class="plata" id="plata"></div>
   <div class="stats" id="statsSemana"></div>
   <div id="avisoSemana"></div>
-  <p style="margin-top:16px; font-weight:600">¿Qué haces esta semana?</p>
+  <p style="margin-top:14px; font-weight:600">¿Qué haces esta semana?</p>
   <div class="tarjeta" onclick="elegirAccion('entrenar')">
     <div class="titulo">🏃 Entrenar duro</div>
     <div class="detalle">+ Forma, − Energía. El camino del profesional.</div>
   </div>
   <div class="tarjeta" onclick="elegirAccion('descansar')">
-    <div class="titulo">😴 Descansar y recuperarte</div>
+    <div class="titulo">😴 Descansar</div>
     <div class="detalle">+ Energía. Las piernas también juegan.</div>
   </div>
   <div class="tarjeta" onclick="elegirAccion('farra')">
     <div class="titulo">🎉 Salir de farra</div>
-    <div class="detalle">+ Moral, − Forma y Energía. Y si te graban... problema.</div>
+    <div class="detalle">+ Moral, − Forma y Energía. Y si te graban... lío.</div>
   </div>
+  <details>
+    <summary>🛍️ Gastar la plata</summary>
+    <div id="tienda"></div>
+  </details>
+  <details>
+    <summary>🏆 Tabla de posiciones</summary>
+    <div id="tabla"></div>
+  </details>
 </div>
 
-<!-- ========== PANTALLA: PARTIDO ========== -->
+<!-- ===== PARTIDO ===== -->
 <div class="pantalla" id="p-partido">
-  <h2 id="partidoTitulo"></h2>
+  <h2 id="partidoTitulo" style="font-size:1.05rem"></h2>
+  <div id="hud">
+    <span id="hudMinuto"></span><span id="hudMarcador"></span><span id="hudJugada"></span>
+  </div>
   <canvas id="lienzo"></canvas>
   <div id="narracion"></div>
-  <button id="botonPartido" onclick="continuarPartido()">COMENZAR PARTIDO</button>
+  <button id="botonPartido" onclick="continuarPartido()">SALIR A LA CANCHA</button>
 </div>
 
-<!-- ========== PANTALLA: REDES SOCIALES ========== -->
+<!-- ===== REDES ===== -->
 <div class="pantalla" id="p-redes">
   <h2>📱 Después del partido...</h2>
   <div class="marcador" id="marcadorFinal"></div>
@@ -141,7 +140,7 @@
   <button onclick="siguienteSemana()">SIGUIENTE SEMANA</button>
 </div>
 
-<!-- ========== PANTALLA: FIN DE TEMPORADA ========== -->
+<!-- ===== FINAL ===== -->
 <div class="pantalla" id="p-final">
   <h2 id="finalTitulo"></h2>
   <p class="sub" id="finalTexto"></p>
@@ -149,41 +148,63 @@
   <button onclick="location.reload()">JUGAR OTRA TEMPORADA</button>
 </div>
 
+<!-- ===== DIÁLOGOS DE HISTORIA ===== -->
+<div id="dialogo">
+  <div class="caja">
+    <div class="quien"><span class="cara" id="dCara"></span><span id="dQuien"></span></div>
+    <div class="texto" id="dTexto"></div>
+    <div id="dOpciones"></div>
+    <div class="pista" id="dPista">toca para continuar ▸</div>
+  </div>
+</div>
+
 <script>
 // ============================================================
-// HÉROE DEL BARRIO — prototipo v0
-// Simulador de carrera futbolística: decisiones semanales,
-// partidos jugables (minijuego de definición) y un mundo que
-// reacciona: hinchada en redes, presión del club y del DT.
+// HÉROE DEL BARRIO v1
+// Carrera de futbolista con partidos jugables en una cancha 2D
+// (regate, pases, defensas con IA), liga de 10 clubes, historia
+// con personajes, contrato, plata, redes sociales y presión real.
 // ============================================================
 
-// ---------- ESTADO DE LA CARRERA ----------
-const TOTAL_PARTIDOS = 10;
-
-const RIVALES = [
-  'Deportivo Río', 'Atlético Norte', 'Águilas FC', 'Real Sabana',
-  'Tiburones del Puerto', 'Leones del Valle', 'Cumbia FC',
-  'Once de Oriente', 'Furia Capital', 'Titanes (final)'
+// ---------- DATOS DEL MUNDO ----------
+const EQUIPOS = [
+  { n: 'Cóndores FC',          f: 60 },  // tu club
+  { n: 'Deportivo Río',        f: 45 },
+  { n: 'Atlético Norte',       f: 50 },
+  { n: 'Águilas del Norte',    f: 55 },
+  { n: 'Real Sabana',          f: 58 },
+  { n: 'Tiburones del Puerto', f: 62 },
+  { n: 'Leones del Valle',     f: 66 },
+  { n: 'Once de Oriente',      f: 70 },
+  { n: 'Furia Capital',        f: 75 },
+  { n: 'Real Cumbia',          f: 82 }   // el clásico rival, la final
 ];
+const TOTAL_PARTIDOS = 9; // juegas contra los otros 9 clubes
 
-let J = null; // el jugador y su mundo
+const PIELES = ['#8d5524', '#c68642', '#f1c27d'];
+let pielElegida = 0;
+function elegirPiel(i) {
+  pielElegida = i;
+  document.querySelectorAll('.piel').forEach((p, j) => p.classList.toggle('activa', j === i));
+}
+
+// ---------- ESTADO DEL JUGADOR ----------
+let J = null;
 
 function iniciarCarrera() {
   const nombre = document.getElementById('nombreInput').value.trim() || 'Orjuela';
   J = {
-    nombre,
-    partido: 0,          // índice del próximo partido (0..9)
-    forma: 55,
-    energia: 80,
-    moral: 60,
-    reputacion: 40,      // qué tanto te quiere la hinchada
-    confianzaDT: 60,     // qué tanto te banca el club
-    goles: 0,
-    escandaloPendiente: false,
-    rachaPalo: { lado: null, veces: 0 } // el arquero te estudia
+    nombre, piel: PIELES[pielElegida],
+    semana: 0,
+    forma: 55, energia: 80, moral: 60,
+    reputacion: 35, confianzaDT: 55,
+    goles: 0, dinero: 5,        // millones de pesos
+    salario: 3, primaGol: 2,
+    comprado: {},
+    escandalo: false,
+    tabla: EQUIPOS.map(e => ({ ...e, pts: 0, gf: 0, gc: 0 }))
   };
-  irA('p-semana');
-  pintarSemana();
+  historia(HISTORIA.intro, () => { pintarSemana(); irA('p-semana'); });
 }
 
 function irA(id) {
@@ -191,363 +212,597 @@ function irA(id) {
   document.getElementById(id).classList.add('activa');
   window.scrollTo(0, 0);
 }
+const clamp = v => Math.max(0, Math.min(100, v));
+const azar = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const elegir = l => l[Math.floor(Math.random() * l.length)];
 
-function clamp(v) { return Math.max(0, Math.min(100, v)); }
-function azar(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-function elegir(lista) { return lista[Math.floor(Math.random() * lista.length)]; }
+// ---------- HISTORIA (diálogos) ----------
+const HISTORIA = {
+  intro: [
+    { c: '🕴️', q: 'Don Iván, empresario', t: 'Llevo 20 años buscando jugadores y a ti te vi DOS jugadas. Con eso me bastó, pelao. Fírmame este papel: mañana entrenas con Cóndores FC, primera división.' },
+    { c: '👩🏽', q: 'Tu mamá', t: 'Mijo... yo sabía. Desde que rompió la primera ventana con ese balón, yo sabía. Vaya y cumpla el sueño, pero no se me agrande ni se me olvide de dónde salió.' },
+    { c: '🧔🏽', q: 'Míster Salazar, DT de Cóndores', t: 'Así que tú eres la joyita del barrio. Mira: acá llegan diez como tú cada año y nueve se devuelven en bus. A mí no me hables, demuéstramelo en la cancha. Juegas el sábado.' }
+  ],
+  rival: [
+    { c: '😒', q: 'Maicol Restrepo, delantero suplente', t: 'Ah, tú eres el que vino a quitarme el puesto... Tranquilo, barrio. Los empresarios traen juguetes nuevos cada año. Cuando falles dos partidos seguidos, el que vuelve a la titular soy yo.' },
+    { c: '🕴️', q: 'Don Iván', t: 'No le pares bolas a Maicol. Pero tampoco le des el gusto: cada gol tuyo es un clavo en su banca.' }
+  ],
+  contrato: [
+    { c: '🕴️', q: 'Don Iván', t: 'Pelao, el club quiere hablar de tu contrato. Vas bien y lo saben. Podemos pedir aumento... o firmar tranquilo lo que ofrecen y ganarnos al DT. Tú decides.' }
+  ],
+  clasico: [
+    { c: '🧔🏽', q: 'Míster Salazar', t: 'Esta semana es el clásico contra Real Cumbia. Esta ciudad se divide en dos colores, y los dos van a estar gritando. Si la metes en el clásico, eres eterno. Si fallas... también.' },
+    { c: '👩🏽', q: 'Tu mamá', t: 'Mijo, va a ir todo el barrio al estadio. Don Próspero alquiló un bus. Hasta el padre va. Métala por nosotros.' }
+  ]
+};
 
-// ---------- PANTALLA DE SEMANA ----------
+let dCola = [], dAlTerminar = null;
+function historia(escenas, alTerminar) {
+  dCola = [...escenas];
+  dAlTerminar = alTerminar || null;
+  document.getElementById('dialogo').style.display = 'block';
+  pasarDialogo();
+}
+function pasarDialogo() {
+  if (!dCola.length) {
+    document.getElementById('dialogo').style.display = 'none';
+    if (dAlTerminar) { const f = dAlTerminar; dAlTerminar = null; f(); }
+    return;
+  }
+  const e = dCola.shift();
+  document.getElementById('dCara').textContent = e.c;
+  document.getElementById('dQuien').textContent = e.q;
+  document.getElementById('dTexto').textContent = e.t;
+  const op = document.getElementById('dOpciones');
+  op.innerHTML = '';
+  if (e.opciones) {
+    document.getElementById('dPista').style.display = 'none';
+    e.opciones.forEach(o => {
+      const b = document.createElement('button');
+      b.textContent = o.t;
+      b.onclick = ev => { ev.stopPropagation(); o.f(); pasarDialogo(); };
+      op.appendChild(b);
+    });
+  } else {
+    document.getElementById('dPista').style.display = 'block';
+  }
+}
+document.getElementById('dialogo').addEventListener('click', () => {
+  if (!document.getElementById('dOpciones').children.length) pasarDialogo();
+});
+
+// ---------- SEMANA / HUB ----------
 function pintarSemana() {
-  document.getElementById('semanaTitulo').textContent =
-    `Semana ${J.partido + 1} de ${TOTAL_PARTIDOS}`;
+  const rival = EQUIPOS[J.semana + 1];
+  document.getElementById('semanaTitulo').textContent = `Fecha ${J.semana + 1} de ${TOTAL_PARTIDOS}`;
   document.getElementById('semanaRival').textContent =
-    `Próximo rival: ${RIVALES[J.partido]} · Goles en la temporada: ${J.goles}`;
+    `Próximo rival: ${rival.n}${rival.n === 'Real Cumbia' ? ' 🔥 EL CLÁSICO' : ''} · Posición en la liga: ${posicionLiga()}º`;
+  document.getElementById('plata').textContent =
+    `💰 $${J.dinero} millones · Salario: $${J.salario}M/semana · Prima por gol: $${J.primaGol}M`;
   pintarStats('statsSemana');
+  pintarTienda();
+  pintarTabla();
 
   const aviso = document.getElementById('avisoSemana');
   if (J.confianzaDT < 30) {
-    aviso.innerHTML = `<div class="aviso">⚠️ El DT te llamó aparte: "O mejoras ya, o juega otro". Estás a un mal partido de la banca.</div>`;
+    aviso.innerHTML = `<div class="aviso">⚠️ Míster Salazar te llamó aparte: "Maicol está pidiendo tu puesto a gritos. Un partido más así y se lo doy".</div>`;
   } else if (J.energia < 30) {
-    aviso.innerHTML = `<div class="aviso">🦵 Tienes las piernas pesadas. Con esta energía vas a llegar tarde a las jugadas.</div>`;
-  } else {
-    aviso.innerHTML = '';
-  }
+    aviso.innerHTML = `<div class="aviso">🦵 Piernas pesadas: vas a correr lento y tendrás menos llegadas. Considera descansar.</div>`;
+  } else aviso.innerHTML = '';
 }
 
-function pintarStats(idContenedor) {
+function pintarStats(id) {
   const defs = [
-    ['Forma', J.forma, '#4ade80'],
-    ['Energía', J.energia, '#60a5fa'],
-    ['Moral', J.moral, '#facc15'],
-    ['Hinchada', J.reputacion, '#f472b6'],
-    ['Confianza DT', J.confianzaDT, '#fb923c'],
-    ['Goles', null, null]
+    ['Forma', J.forma, '#4ade80'], ['Energía', J.energia, '#60a5fa'],
+    ['Moral', J.moral, '#facc15'], ['Hinchada', J.reputacion, '#f472b6'],
+    ['Confianza DT', J.confianzaDT, '#fb923c'], ['Goles', null, null]
   ];
-  document.getElementById(idContenedor).innerHTML = defs.map(([n, v, c]) =>
+  document.getElementById(id).innerHTML = defs.map(([n, v, c]) =>
     v === null
-      ? `<div class="stat"><div class="nombre">${n}</div><div style="font-size:1.4rem;font-weight:800;margin-top:2px">${J.goles} ⚽</div></div>`
-      : `<div class="stat"><div class="nombre">${n}</div>
-           <div class="barra"><div class="relleno" style="width:${v}%;background:${c}"></div></div>
-         </div>`
+      ? `<div class="stat"><div class="nombre">${n}</div><div style="font-size:1.3rem;font-weight:800">${J.goles} ⚽</div></div>`
+      : `<div class="stat"><div class="nombre">${n}</div><div class="barra"><div class="relleno" style="width:${v}%;background:${c}"></div></div></div>`
   ).join('');
 }
 
-function elegirAccion(accion) {
-  if (accion === 'entrenar') {
-    J.forma = clamp(J.forma + azar(8, 14));
-    J.energia = clamp(J.energia - azar(10, 16));
-  } else if (accion === 'descansar') {
-    J.energia = clamp(J.energia + azar(15, 25));
-    J.forma = clamp(J.forma - 3); // sin entrenar, la forma se oxida un poco
-  } else if (accion === 'farra') {
+const TIENDA = [
+  { id: 'moto',   t: '🏍️ Moto nueva', p: 15, d: '+12 moral. Llegar al entrenamiento con estilo.', f: () => J.moral = clamp(J.moral + 12) },
+  { id: 'cadena', t: '⛓️ Cadena de oro', p: 10, d: '+8 hinchada. El flow también cuenta.', f: () => J.reputacion = clamp(J.reputacion + 8) },
+  { id: 'casa',   t: '🏠 Casa para tu mamá', p: 60, d: '+20 moral, +12 hinchada. El verdadero sueño.', f: () => { J.moral = clamp(J.moral + 20); J.reputacion = clamp(J.reputacion + 12); } }
+];
+function pintarTienda() {
+  document.getElementById('tienda').innerHTML = TIENDA.map(i => {
+    const sinPlata = J.dinero < i.p;
+    const ya = J.comprado[i.id];
+    return `<div class="tarjeta ${ya || sinPlata ? 'agotada' : ''}" onclick="comprar('${i.id}')">
+      <div class="titulo">${i.t} — $${i.p}M ${ya ? '✓ comprado' : ''}</div>
+      <div class="detalle">${i.d}</div></div>`;
+  }).join('');
+}
+function comprar(id) {
+  const i = TIENDA.find(x => x.id === id);
+  if (J.comprado[id] || J.dinero < i.p) return;
+  J.dinero -= i.p;
+  J.comprado[id] = true;
+  i.f();
+  pintarSemana();
+}
+
+function elegirAccion(a) {
+  if (a === 'entrenar') { J.forma = clamp(J.forma + azar(8, 14)); J.energia = clamp(J.energia - azar(10, 16)); }
+  if (a === 'descansar') { J.energia = clamp(J.energia + azar(15, 25)); J.forma = clamp(J.forma - 3); }
+  if (a === 'farra') {
     J.moral = clamp(J.moral + azar(12, 20));
     J.forma = clamp(J.forma - azar(8, 14));
     J.energia = clamp(J.energia - azar(12, 20));
-    if (Math.random() < 0.4) J.escandaloPendiente = true; // te grabaron...
+    if (Math.random() < 0.4) J.escandalo = true;
   }
+  // Eventos de historia antes de ciertos partidos
+  if (J.semana === 2) { historia(HISTORIA.rival, prepararPartido); return; }
+  if (J.semana === 4) {
+    const esc = [...HISTORIA.contrato];
+    esc.push({
+      c: '📄', q: 'Negociación', t: '¿Qué le decimos al club?',
+      opciones: [
+        { t: '💸 Pedir aumento (salario x2, el DT se ofende)', f: () => { J.salario *= 2; J.primaGol += 1; J.confianzaDT = clamp(J.confianzaDT - 12); } },
+        { t: '🤝 Firmar tranquilo (+12 confianza del DT)', f: () => { J.confianzaDT = clamp(J.confianzaDT + 12); } }
+      ]
+    });
+    historia(esc, prepararPartido);
+    return;
+  }
+  if (EQUIPOS[J.semana + 1].n === 'Real Cumbia') { historia(HISTORIA.clasico, prepararPartido); return; }
   prepararPartido();
 }
 
-// ---------- EL PARTIDO ----------
-// El partido se vive en "momentos clave": oportunidades de gol que
-// dependen de tu forma. Cada una es el minijuego de definición.
-let P = null; // estado del partido en curso
-
-function prepararPartido() {
-  let oportunidades = 2;
-  if (J.forma >= 55) oportunidades++;
-  if (J.forma >= 85) oportunidades++;
-  if (J.energia < 30) oportunidades = Math.max(1, oportunidades - 1);
-
-  P = {
-    rival: RIVALES[J.partido],
-    dificultad: J.partido,               // el arquero mejora cada fecha
-    oportunidades,
-    jugada: 0,
-    golesMios: 0,
-    fallos: 0,
-    minutos: generarMinutos(oportunidades),
-    fase: 'previa'                        // previa | esperando | apuntar | potencia | animando | final
-  };
-
-  document.getElementById('partidoTitulo').textContent =
-    `Fecha ${J.partido + 1}: vs ${P.rival}`;
-  document.getElementById('narracion').textContent =
-    J.energia < 30
-      ? 'Sales a la cancha con las piernas pesadas. Hoy tendrás pocas llegadas: no las desperdicies.'
-      : `El estadio está lleno. Tu forma te dará ${oportunidades} llegadas claras hoy.`;
-  document.getElementById('botonPartido').style.display = 'block';
-  document.getElementById('botonPartido').textContent = 'COMENZAR PARTIDO';
-  irA('p-partido');
-  ajustarLienzo();
-  dibujarEscena();
+// ---------- LIGA ----------
+function posicionLiga() {
+  const orden = [...J.tabla].sort((a, b) => b.pts - a.pts || (b.gf - b.gc) - (a.gf - a.gc));
+  return orden.findIndex(e => e.n === 'Cóndores FC') + 1;
+}
+function pintarTabla() {
+  const orden = [...J.tabla].sort((a, b) => b.pts - a.pts || (b.gf - b.gc) - (a.gf - a.gc));
+  document.getElementById('tabla').innerHTML =
+    `<table><tr><th>#</th><th>Club</th><th>Pts</th><th>GF:GC</th></tr>` +
+    orden.map((e, i) =>
+      `<tr class="${e.n === 'Cóndores FC' ? 'mio' : ''}"><td>${i + 1}</td><td>${e.n}</td><td>${e.pts}</td><td>${e.gf}:${e.gc}</td></tr>`
+    ).join('') + '</table>';
+}
+function simularOtrosPartidos() {
+  // Los otros 8 clubes juegan entre sí
+  const otros = J.tabla.filter(e => e.n !== 'Cóndores FC' && e.n !== EQUIPOS[J.semana + 1].n);
+  for (let i = 0; i + 1 < otros.length; i += 2) {
+    const a = otros[i], b = otros[i + 1];
+    const ga = azar(0, 1 + (a.f > b.f ? 2 : 1)), gb = azar(0, 1 + (b.f > a.f ? 2 : 1));
+    a.gf += ga; a.gc += gb; b.gf += gb; b.gc += ga;
+    if (ga > gb) a.pts += 3; else if (gb > ga) b.pts += 3; else { a.pts++; b.pts++; }
+  }
+}
+function registrarMiPartido(gf, gc) {
+  const mio = J.tabla.find(e => e.n === 'Cóndores FC');
+  const riv = J.tabla.find(e => e.n === EQUIPOS[J.semana + 1].n);
+  mio.gf += gf; mio.gc += gc; riv.gf += gc; riv.gc += gf;
+  if (gf > gc) mio.pts += 3; else if (gc > gf) riv.pts += 3; else { mio.pts++; riv.pts++; }
+  simularOtrosPartidos();
 }
 
-function generarMinutos(n) {
+// ============================================================
+// EL PARTIDO: cancha 2D jugable
+// ============================================================
+const lienzo = document.getElementById('lienzo');
+const ctx = lienzo.getContext('2d');
+let G = {};   // geometría
+let P = null; // estado del partido
+let M = null; // estado de la jugada en vivo (entidades)
+let rafId = null;
+
+function ajustarLienzo() {
+  const w = Math.min(window.innerWidth - 28, 488);
+  lienzo.width = w;
+  lienzo.height = Math.round(w * 1.3);
+  const bocaW = w * 0.46;
+  G = {
+    w, h: lienzo.height,
+    bocaX0: (w - bocaW) / 2, bocaX1: (w + bocaW) / 2,
+    lineaGol: 34, bocaY: 6
+  };
+}
+window.addEventListener('resize', () => { if (P) { ajustarLienzo(); if (M) dibujar(); } });
+
+function prepararPartido() {
+  ajustarLienzo();
+  const rival = EQUIPOS[J.semana + 1];
+  let n = 2;
+  if (J.forma >= 55) n++;
+  if (J.forma >= 85) n++;
+  if (J.energia < 30) n = Math.max(1, n - 1);
+
+  P = {
+    rival, dificultad: J.semana,
+    totalJugadas: n, jugada: 0,
+    golesMios: 0, golesEquipo: 0, golesRival: 0,
+    minutos: minutosDeJuego(n),
+    fase: 'previa'
+  };
+  document.getElementById('partidoTitulo').textContent =
+    `Fecha ${J.semana + 1}: Cóndores FC vs ${rival.n}`;
+  document.getElementById('narracion').textContent =
+    J.energia < 30
+      ? 'Sales con las piernas pesadas: hoy corres lento y tienes pocas llegadas.'
+      : `Tu forma te dará ${n} jugadas de ataque. Arrastra para correr, toca un compañero para el pase, toca el arco para rematar.`;
+  const b = document.getElementById('botonPartido');
+  b.style.display = 'block';
+  b.textContent = 'SALIR A LA CANCHA';
+  actualizarHUD();
+  irA('p-partido');
+  M = null;
+  dibujarFondo();
+}
+
+function minutosDeJuego(n) {
   const m = [];
-  while (m.length < n) {
-    const x = azar(4, 90);
-    if (!m.includes(x)) m.push(x);
-  }
+  while (m.length < n) { const x = azar(4, 90); if (!m.includes(x)) m.push(x); }
   return m.sort((a, b) => a - b);
 }
 
+function actualizarHUD() {
+  document.getElementById('hudMinuto').textContent =
+    P.jugada < P.totalJugadas ? `⏱️ ${P.minutos[Math.min(P.jugada, P.totalJugadas - 1)]}'` : '⏱️ 90\'';
+  document.getElementById('hudMarcador').textContent =
+    `CÓN ${P.golesEquipo + P.golesMios} - ${P.golesRival} ${P.rival.n.slice(0, 3).toUpperCase()}`;
+  document.getElementById('hudJugada').textContent = `Jugada ${Math.min(P.jugada + 1, P.totalJugadas)}/${P.totalJugadas}`;
+}
+
 function continuarPartido() {
-  if (P.jugada < P.oportunidades) {
-    iniciarOportunidad();
-  } else {
-    terminarPartido();
-  }
+  if (P.jugada < P.totalJugadas) iniciarJugada();
+  else terminarPartido();
 }
 
-function iniciarOportunidad() {
-  document.getElementById('narracion').textContent =
-    `⏱️ Minuto ${P.minutos[P.jugada]}: ¡quedas mano a mano! Toca dónde rematar.`;
+// ---------- una jugada de ataque en vivo ----------
+function iniciarJugada() {
+  // A veces el rival golpea antes de tu jugada (más si es fuerte)
+  if (Math.random() < 0.10 + P.dificultad * 0.02) {
+    P.golesRival++;
+    actualizarHUD();
+    document.getElementById('narracion').textContent = `😠 ¡Gol de ${P.rival.n}! Toca remar: la próxima jugada es tuya.`;
+  }
+
+  const w = G.w, h = G.h;
+  const nDef = Math.min(6, 3 + Math.floor(P.dificultad / 2));
+  M = {
+    yo: { x: w / 2, y: h * 0.82, vel: 2.5 + J.forma * 0.009 - (J.energia < 40 ? 0.5 : 0) },
+    objetivo: { x: w / 2, y: h * 0.82 },
+    compas: [
+      { x: w * 0.16, y: h * 0.62, tiene: 0 },
+      { x: w * 0.84, y: h * 0.60, tiene: 0 }
+    ],
+    defensas: Array.from({ length: nDef }, (_, i) => ({
+      x: w * (0.18 + 0.64 * (i / Math.max(1, nDef - 1))),
+      y: h * (0.30 + 0.10 * (i % 3)),
+      vel: 1.7 + P.dificultad * 0.13,
+      stun: 0, contacto: 0
+    })),
+    arquero: { x: w / 2, reach: 24 + P.dificultad * 2.2 },
+    pelota: { duena: 'yo', x: 0, y: 0, viaje: null },
+    frames: 0, limite: 18 * 60,
+    fin: null
+  };
+  P.fase = 'jugando';
   document.getElementById('botonPartido').style.display = 'none';
-  P.fase = 'apuntar';
-  dibujarEscena();
+  document.getElementById('narracion').textContent = '¡Tuya! Arrastra el dedo para correr.';
+  actualizarHUD();
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(ciclo);
 }
 
-// ---------- MINIJUEGO DE DEFINICIÓN (canvas) ----------
-const lienzo = document.getElementById('lienzo');
-const ctx = lienzo.getContext('2d');
-let G = {}; // geometría del arco, recalculada al ajustar tamaño
-
-function ajustarLienzo() {
-  const w = Math.min(window.innerWidth - 32, 488);
-  lienzo.width = w;
-  lienzo.height = Math.round(w * 0.72);
-  const aw = w * 0.8;                    // ancho del arco
-  G = {
-    arcoX: (w - aw) / 2, arcoY: lienzo.height * 0.14,
-    arcoW: aw, arcoH: lienzo.height * 0.42,
-    bolaX: w / 2, bolaY: lienzo.height - 36,
-    barraY: lienzo.height - 14, barraW: w * 0.7
-  };
-}
-window.addEventListener('resize', () => { ajustarLienzo(); if (P) dibujarEscena(); });
-
-let objetivo = null;       // dónde apuntaste
-let barraPos = 0, barraDir = 1, barraAnim = null;
-let bola = null, arquero = null;
-
+// ---------- entrada ----------
+let punteroActivo = false;
 lienzo.addEventListener('pointerdown', e => {
-  if (!P) return;
-  const r = lienzo.getBoundingClientRect();
-  const x = (e.clientX - r.left) * (lienzo.width / r.width);
-  const y = (e.clientY - r.top) * (lienzo.height / r.height);
+  if (!P || P.fase !== 'jugando' || !M) return;
+  const p = posEnLienzo(e);
+  punteroActivo = true;
 
-  if (P.fase === 'apuntar') {
-    // Solo cuenta si tocas dentro del arco
-    if (x < G.arcoX || x > G.arcoX + G.arcoW || y < G.arcoY || y > G.arcoY + G.arcoH) return;
-    objetivo = { x, y };
-    P.fase = 'potencia';
-    barraPos = 0; barraDir = 1;
-    animarBarra();
-  } else if (P.fase === 'potencia') {
-    cancelAnimationFrame(barraAnim);
-    ejecutarRemate();
+  // ¿Tocaste el arco? → remate (solo si tienes la pelota)
+  if (p.y < G.lineaGol + 14 && M.pelota.duena === 'yo') {
+    if (M.yo.y > G.h * 0.55) {
+      document.getElementById('narracion').textContent = '📣 "¡Desde ahí no, acércate más!" — Míster Salazar';
+      return;
+    }
+    rematar(Math.max(G.bocaX0 + 8, Math.min(G.bocaX1 - 8, p.x)));
+    return;
   }
+  // ¿Tocaste un compañero? → pase
+  if (M.pelota.duena === 'yo') {
+    for (let i = 0; i < 2; i++) {
+      const c = M.compas[i];
+      if (Math.hypot(c.x - p.x, c.y - p.y) < 38) { pasar(i); return; }
+    }
+  }
+  M.objetivo = p;
 });
+lienzo.addEventListener('pointermove', e => {
+  if (!punteroActivo || !M || P.fase !== 'jugando') return;
+  M.objetivo = posEnLienzo(e);
+});
+window.addEventListener('pointerup', () => punteroActivo = false);
 
-function animarBarra() {
-  // La barra va más rápido si estás cansado o el rival es duro
-  const velocidad = 0.022 + P.dificultad * 0.0035 + (J.energia < 40 ? 0.012 : 0);
-  barraPos += barraDir * velocidad;
-  if (barraPos >= 1) { barraPos = 1; barraDir = -1; }
-  if (barraPos <= 0) { barraPos = 0; barraDir = 1; }
-  dibujarEscena();
-  barraAnim = requestAnimationFrame(animarBarra);
-}
-
-function ejecutarRemate() {
-  P.fase = 'animando';
-
-  // --- Precisión: qué tan lejos cae el balón de donde apuntaste ---
-  const falloTiming = Math.abs(barraPos - 0.5) * 2;            // 0 = perfecto
-  const errorPx = (G.arcoW / 22)
-    + falloTiming * (G.arcoW / 5)
-    + (100 - J.forma) * (G.arcoW / 900)
-    + (100 - J.moral) * (G.arcoW / 1800);
-  const ang = Math.random() * Math.PI * 2;
-  const destino = {
-    x: objetivo.x + Math.cos(ang) * errorPx * Math.random(),
-    y: objetivo.y + Math.sin(ang) * errorPx * Math.random()
+function posEnLienzo(e) {
+  const r = lienzo.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (lienzo.width / r.width),
+    y: (e.clientY - r.top) * (lienzo.height / r.height)
   };
-
-  // ¿Se fue afuera?
-  const afuera = destino.x < G.arcoX || destino.x > G.arcoX + G.arcoW ||
-                 destino.y < G.arcoY || destino.y > G.arcoY + G.arcoH;
-
-  // --- El arquero: se lanza, y aprende si repites palo ---
-  const centro = G.arcoX + G.arcoW / 2;
-  const lado = objetivo.x < centro ? 'izq' : 'der';
-  if (lado === J.rachaPalo.lado) J.rachaPalo.veces++;
-  else J.rachaPalo = { lado, veces: 1 };
-
-  let pLectura = 0.28 + P.dificultad * 0.045 + (J.rachaPalo.veces - 1) * 0.18;
-  pLectura = Math.min(0.9, pLectura);
-  const leyo = Math.random() < pLectura;
-  const arqX = leyo
-    ? destino.x + (Math.random() - 0.5) * G.arcoW * 0.1
-    : centro + (lado === 'izq' ? 1 : -1) * G.arcoW * (0.15 + Math.random() * 0.2);
-  const alcance = G.arcoW * (0.085 + P.dificultad * 0.006);
-  const atajo = !afuera && Math.abs(arqX - destino.x) < alcance &&
-                destino.y > G.arcoY + G.arcoH * 0.18; // los ángulos altos no los alcanza
-
-  arquero = { x: centro, destinoX: arqX };
-  bola = { x: G.bolaX, y: G.bolaY, destino, t: 0 };
-
-  animarRemate(afuera ? 'afuera' : (atajo ? 'atajado' : 'gol'));
 }
 
-function animarRemate(resultado) {
-  bola.t += 0.06;
-  const t = Math.min(1, bola.t);
-  bola.x = G.bolaX + (bola.destino.x - G.bolaX) * t;
-  bola.y = G.bolaY + (bola.destino.y - G.bolaY) * t - Math.sin(t * Math.PI) * 30;
-  arquero.x += (arquero.destinoX - arquero.x) * 0.12;
-  dibujarEscena();
+// ---------- acciones ----------
+function pasar(i) {
+  const c = M.compas[i];
+  M.pelota.viaje = {
+    x0: M.yo.x, y0: M.yo.y, x1: c.x, y1: c.y, t: 0,
+    alLlegar: () => { M.pelota.duena = 'c' + i; c.tiene = 0; }
+  };
+  M.pelota.duena = 'aire';
+}
 
-  if (t < 1) { requestAnimationFrame(() => animarRemate(resultado)); return; }
+function rematar(objetivoX) {
+  const dist = M.yo.y - G.lineaGol;
+  const error = dist * 0.05 + (100 - J.forma) * 0.22 + (100 - J.moral) * 0.08;
+  const finalX = objetivoX + (Math.random() - 0.5) * 2 * error;
 
-  // Resolver la jugada
+  // El arquero decide: ¿te leyó el palo?
+  const pLee = Math.min(0.85, 0.32 + P.dificultad * 0.05);
+  const lee = Math.random() < pLee;
+  M.arquero.destino = lee
+    ? finalX + (Math.random() - 0.5) * 18
+    : G.bocaX0 + Math.random() * (G.bocaX1 - G.bocaX0);
+
+  M.pelota.viaje = {
+    x0: M.yo.x, y0: M.yo.y, x1: finalX, y1: G.lineaGol - 10, t: 0, esTiro: true,
+    alLlegar: () => resolverTiro(finalX, dist)
+  };
+  M.pelota.duena = 'aire';
+}
+
+function resolverTiro(x, dist) {
+  const afuera = x < G.bocaX0 + 3 || x > G.bocaX1 - 3;
+  let reach = M.arquero.reach;
+  if (dist > G.h * 0.32) reach *= 1.35; // de lejos, el arquero llega mejor
+  const atajado = !afuera && Math.abs(M.arquero.x - x) < reach;
+
+  if (afuera) finJugada('afuera');
+  else if (atajado) finJugada('atajado');
+  else finJugada('gol');
+}
+
+// ---------- simulación por frame ----------
+function ciclo() {
+  const m = M;
+  m.frames++;
+
+  // mover al jugador hacia el dedo
+  const dx = m.objetivo.x - m.yo.x, dy = m.objetivo.y - m.yo.y;
+  const d = Math.hypot(dx, dy);
+  if (d > 4) {
+    m.yo.x += (dx / d) * m.yo.vel;
+    m.yo.y += (dy / d) * m.yo.vel;
+  }
+  m.yo.x = Math.max(14, Math.min(G.w - 14, m.yo.x));
+  m.yo.y = Math.max(G.lineaGol + 20, Math.min(G.h - 14, m.yo.y));
+
+  // compañeros: acompañan la jugada por las bandas
+  m.compas.forEach((c, i) => {
+    const metaY = Math.max(G.h * 0.30, m.yo.y - G.h * 0.16);
+    c.y += (metaY - c.y) * 0.02;
+    c.x += ((i === 0 ? G.w * 0.16 : G.w * 0.84) - c.x) * 0.02 + Math.sin(m.frames / 40 + i * 3) * 0.4;
+    if (m.pelota.duena === 'c' + i) {
+      c.tiene++;
+      if (c.tiene > 70) { // te la devuelve cuando te desmarcas
+        m.pelota.viaje = {
+          x0: c.x, y0: c.y, x1: m.yo.x, y1: m.yo.y, t: 0, seguir: true,
+          alLlegar: () => m.pelota.duena = 'yo'
+        };
+        m.pelota.duena = 'aire';
+      }
+    }
+  });
+
+  // pelota: pegada al dueño o viajando
+  const pl = m.pelota;
+  if (pl.duena === 'yo') { pl.x = m.yo.x + 10; pl.y = m.yo.y + 6; }
+  else if (pl.duena === 'c0') { pl.x = m.compas[0].x + 10; pl.y = m.compas[0].y + 6; }
+  else if (pl.duena === 'c1') { pl.x = m.compas[1].x + 10; pl.y = m.compas[1].y + 6; }
+  else if (pl.viaje) {
+    const v = pl.viaje;
+    v.t += v.esTiro ? 0.07 : 0.05;
+    if (v.seguir) { v.x1 = m.yo.x; v.y1 = m.yo.y; } // el pase de vuelta te busca
+    const t = Math.min(1, v.t);
+    pl.x = v.x0 + (v.x1 - v.x0) * t;
+    pl.y = v.y0 + (v.y1 - v.y0) * t;
+    // intercepción de pases (no de tiros)
+    if (!v.esTiro) {
+      for (const df of m.defensas) {
+        if (!df.probo && Math.hypot(df.x - pl.x, df.y - pl.y) < 16) {
+          df.probo = true;
+          if (Math.random() < 0.3 + P.dificultad * 0.03) { finJugada('intercepcion'); return; }
+        }
+      }
+    }
+    if (t >= 1) { pl.viaje = null; v.alLlegar(); m.defensas.forEach(df => df.probo = false); }
+  }
+
+  // defensas: persiguen al que tenga la pelota
+  let presa = null;
+  if (pl.duena === 'yo') presa = m.yo;
+  else if (pl.duena === 'c0') presa = m.compas[0];
+  else if (pl.duena === 'c1') presa = m.compas[1];
+  for (const df of m.defensas) {
+    if (df.stun > 0) { df.stun--; continue; }
+    if (presa) {
+      const ddx = presa.x - df.x, ddy = presa.y - df.y;
+      const dd = Math.hypot(ddx, ddy) || 1;
+      df.x += (ddx / dd) * df.vel;
+      df.y += (ddy / dd) * df.vel;
+    }
+    // ¿te alcanzó con la pelota?
+    if (pl.duena === 'yo' && Math.hypot(df.x - m.yo.x, df.y - m.yo.y) < 18) {
+      df.contacto++;
+      if (df.contacto > 14) {
+        df.contacto = 0;
+        if (Math.random() < 0.25 + J.forma / 300) {
+          df.stun = 55; // ¡regate! lo dejaste sembrado
+          document.getElementById('narracion').textContent = '🌀 ¡Qué regate! Lo dejaste sembrado.';
+        } else { finJugada('robo'); return; }
+      }
+    } else df.contacto = Math.max(0, df.contacto - 1);
+  }
+
+  // arquero: sigue la pelota (o vuela si hay tiro)
+  const a = m.arquero;
+  if (pl.viaje && pl.viaje.esTiro) a.x += (a.destino - a.x) * 0.16;
+  else a.x += (Math.max(G.bocaX0, Math.min(G.bocaX1, pl.x)) - a.x) * 0.035;
+
+  // presión: si te demoras, te cierran la jugada
+  if (m.frames > m.limite) { finJugada('tiempo'); return; }
+
+  dibujar();
+  if (P.fase === 'jugando') rafId = requestAnimationFrame(ciclo);
+}
+
+function finJugada(como) {
+  P.fase = 'entre';
+  cancelAnimationFrame(rafId);
   const n = document.getElementById('narracion');
-  if (resultado === 'gol') {
+  if (como === 'gol') {
     P.golesMios++; J.goles++;
     n.textContent = elegir([
-      `⚽ ¡GOOOL! ¡${J.nombre} la mandó a guardar! El estadio se viene abajo.`,
-      `⚽ ¡GOLAZO de ${J.nombre}! El arquero ni la vio.`,
-      `⚽ ¡GOL! Definición fría, de crack.`
+      `⚽ ¡GOOOOL DE ${J.nombre.toUpperCase()}! ¡El estadio explota!`,
+      `⚽ ¡GOLAZO! La pusiste donde el arquero no llega.`,
+      `⚽ ¡GOL! Definición de crack, el barrio celebra.`
     ]);
-  } else if (resultado === 'atajado') {
-    P.fallos++;
-    n.textContent = J.rachaPalo.veces > 1
-      ? `🧤 ¡Atajada! El arquero ya te tenía leído: era el ${J.rachaPalo.veces}º remate al mismo palo.`
-      : '🧤 ¡Atajadón del arquero! Te ahogó el grito.';
-  } else {
-    P.fallos++;
-    n.textContent = elegir([
-      '😖 ¡Afuera! La tiraste a las nubes. Se escuchan silbidos.',
-      '😖 ¡Al palo y afuera! Tan cerca y tan lejos.'
-    ]);
-  }
+  } else if (como === 'atajado') n.textContent = '🧤 ¡Atajadón! El arquero te leyó el remate.';
+  else if (como === 'afuera') n.textContent = '😖 ¡Afuera! Se escuchan los silbidos de la tribuna.';
+  else if (como === 'robo') n.textContent = '😤 Te la quitaron. El defensa llegó antes que tu cabeza.';
+  else if (como === 'intercepcion') n.textContent = '🚫 Pase interceptado. Cuidado con las líneas de pase.';
+  else if (como === 'tiempo') n.textContent = '⏱️ Te cerraron la jugada por demorarte. Hay que decidir más rápido.';
 
   P.jugada++;
-  P.fase = 'esperando';
+  actualizarHUD();
   const b = document.getElementById('botonPartido');
   b.style.display = 'block';
-  b.textContent = P.jugada < P.oportunidades ? 'SEGUIR JUGANDO' : 'PITAZO FINAL';
+  b.textContent = P.jugada < P.totalJugadas ? 'SIGUIENTE JUGADA' : 'PITAZO FINAL';
+  dibujar();
 }
 
-function dibujarEscena() {
-  const w = lienzo.width, h = lienzo.height;
+// ---------- dibujo ----------
+function dibujarFondo() {
+  const w = G.w, h = G.h;
   ctx.clearRect(0, 0, w, h);
-
-  // Tribuna y césped
-  ctx.fillStyle = '#1f2937';
-  ctx.fillRect(0, 0, w, G.arcoY + G.arcoH * 0.5);
+  // césped con franjas
   ctx.fillStyle = '#19381f';
-  ctx.fillRect(0, G.arcoY + G.arcoH * 0.5, w, h);
+  ctx.fillRect(0, 0, w, h);
   ctx.fillStyle = '#1e4426';
-  for (let i = 0; i < 5; i++) ctx.fillRect(0, G.arcoY + G.arcoH * 0.5 + i * 34, w, 17);
-
-  // Arco
+  for (let i = 0; i < 10; i++) ctx.fillRect(0, i * h / 10, w, h / 20);
+  // área y arco
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(w * 0.18, G.lineaGol, w * 0.64, h * 0.2);
+  ctx.beginPath();
+  ctx.arc(w / 2, h * 0.62, 60, 0, Math.PI * 2);
+  ctx.stroke();
+  // la red del arco
+  ctx.fillStyle = '#0b0d12';
+  ctx.fillRect(G.bocaX0, G.bocaY, G.bocaX1 - G.bocaX0, G.lineaGol - G.bocaY);
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = 1;
+  for (let x = G.bocaX0; x <= G.bocaX1; x += 12) {
+    ctx.beginPath(); ctx.moveTo(x, G.bocaY); ctx.lineTo(x, G.lineaGol); ctx.stroke();
+  }
   ctx.strokeStyle = '#fff';
   ctx.lineWidth = 4;
-  ctx.strokeRect(G.arcoX, G.arcoY, G.arcoW, G.arcoH);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; // la red
-  for (let i = 1; i < 10; i++) {
-    ctx.beginPath();
-    ctx.moveTo(G.arcoX + (G.arcoW / 10) * i, G.arcoY);
-    ctx.lineTo(G.arcoX + (G.arcoW / 10) * i, G.arcoY + G.arcoH);
-    ctx.stroke();
-  }
+  ctx.strokeRect(G.bocaX0, G.bocaY, G.bocaX1 - G.bocaX0, G.lineaGol - G.bocaY);
+}
 
-  // Arquero (un rectángulo con guantes, esto es un prototipo 😄)
-  const ax = arquero && P.fase !== 'apuntar' && P.fase !== 'potencia'
-    ? arquero.x : G.arcoX + G.arcoW / 2;
-  ctx.fillStyle = '#facc15';
-  ctx.fillRect(ax - 13, G.arcoY + G.arcoH * 0.35, 26, G.arcoH * 0.62);
-  ctx.beginPath();
-  ctx.arc(ax, G.arcoY + G.arcoH * 0.28, 11, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Mira donde apuntaste
-  if (objetivo && (P.fase === 'potencia' || P.fase === 'animando')) {
-    ctx.strokeStyle = '#f87171';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(objetivo.x, objetivo.y, 12, 0, Math.PI * 2);
-    ctx.moveTo(objetivo.x - 18, objetivo.y); ctx.lineTo(objetivo.x + 18, objetivo.y);
-    ctx.moveTo(objetivo.x, objetivo.y - 18); ctx.lineTo(objetivo.x, objetivo.y + 18);
-    ctx.stroke();
-  }
-
-  // Balón
-  const bx = bola && P.fase === 'animando' ? bola.x : G.bolaX;
-  const by = bola && P.fase === 'animando' ? bola.y : G.bolaY;
-  if (P && P.fase !== 'previa') {
+function muñeco(x, y, camiseta, piel, nombre) {
+  ctx.fillStyle = camiseta;
+  ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = piel;
+  ctx.beginPath(); ctx.arc(x, y - 3, 6, 0, Math.PI * 2); ctx.fill();
+  if (nombre) {
     ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(bx, by, 9, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#333';
-    ctx.stroke();
-  }
-
-  // Barra de precisión
-  if (P && P.fase === 'potencia') {
-    const bx0 = (w - G.barraW) / 2;
-    ctx.fillStyle = '#2a2f3a';
-    ctx.fillRect(bx0, G.barraY - 8, G.barraW, 12);
-    ctx.fillStyle = '#4ade80'; // zona perfecta al centro
-    ctx.fillRect(bx0 + G.barraW * 0.44, G.barraY - 8, G.barraW * 0.12, 12);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(bx0 + G.barraW * barraPos - 3, G.barraY - 12, 6, 20);
+    ctx.font = 'bold 11px Segoe UI, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(nombre, x, y + 26);
   }
 }
 
-// ---------- RESULTADO Y CONSECUENCIAS ----------
+function dibujar() {
+  if (!M) return;
+  dibujarFondo();
+  const m = M;
+  // arquero
+  muñeco(m.arquero.x, (G.bocaY + G.lineaGol) / 2 + 6, '#facc15', '#c68642');
+  // defensas
+  m.defensas.forEach(df => {
+    muñeco(df.x, df.y, df.stun > 0 ? '#7f1d1d' : '#dc2626', '#c68642');
+    if (df.stun > 0) { ctx.font = '12px serif'; ctx.fillText('💫', df.x, df.y - 18); }
+  });
+  // compañeros
+  m.compas.forEach((c, i) => muñeco(c.x, c.y, '#16a34a', '#8d5524', 'compa'));
+  // tú
+  muñeco(m.yo.x, m.yo.y, '#16a34a', J.piel, J.nombre.toUpperCase());
+  ctx.strokeStyle = 'rgba(74,222,128,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(m.yo.x, m.yo.y, 17, 0, Math.PI * 2); ctx.stroke();
+  // pelota
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(m.pelota.x, m.pelota.y, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.stroke();
+  // barra de presión (tiempo de la jugada)
+  const restante = 1 - m.frames / m.limite;
+  ctx.fillStyle = restante < 0.3 ? '#f87171' : 'rgba(255,255,255,0.35)';
+  ctx.fillRect(10, G.h - 8, (G.w - 20) * Math.max(0, restante), 4);
+}
+
+// ---------- resultado y consecuencias ----------
 function terminarPartido() {
-  // Goles de los compañeros y del rival (el rival mejora con las fechas)
-  const golesEquipo = P.golesMios + azar(0, 2);
-  const golesRival = azar(0, 1 + Math.floor(P.dificultad / 3));
-  const gano = golesEquipo > golesRival;
-  const empato = golesEquipo === golesRival;
+  P.golesEquipo += azar(0, 1); // algún compañero también anota
+  if (P.golesRival === 0) P.golesRival = azar(0, 1 + Math.floor(P.dificultad / 4));
+  const gf = P.golesEquipo + P.golesMios, gc = P.golesRival;
+  const gano = gf > gc, empato = gf === gc;
+  const fallos = P.totalJugadas - P.golesMios;
 
-  // Tu calificación del partido (1 a 10)
-  let nota = 5 + P.golesMios * 2 - P.fallos * 0.8 + (gano ? 1 : (empato ? 0 : -1));
+  let nota = 5 + P.golesMios * 2 - fallos * 0.6 + (gano ? 1 : empato ? 0 : -1);
   nota = Math.max(1, Math.min(10, Math.round(nota * 10) / 10));
+  const esClasico = P.rival.n === 'Real Cumbia';
 
-  P.resultado = { golesEquipo, golesRival, gano, empato, nota };
+  P.resultado = { gf, gc, gano, empato, nota, esClasico };
+  registrarMiPartido(gf, gc);
 
-  // Consecuencias en reputación y confianza del DT
+  // consecuencias
   let dRep, dDT;
-  if (nota >= 8)      { dRep = 14; dDT = 12; }
-  else if (nota >= 6) { dRep = 6;  dDT = 6; }
+  if (nota >= 8) { dRep = 14; dDT = 12; }
+  else if (nota >= 6) { dRep = 6; dDT = 6; }
   else if (nota >= 4.5) { dRep = -4; dDT = -5; }
-  else                { dRep = -12; dDT = -14; }
-  if (J.escandaloPendiente) dRep -= 8;
+  else { dRep = -12; dDT = -14; }
+  if (esClasico) { dRep = Math.round(dRep * 1.8); dDT = Math.round(dDT * 1.5); }
+  if (J.escandalo) dRep -= 8;
 
   J.reputacion = clamp(J.reputacion + dRep);
   J.confianzaDT = clamp(J.confianzaDT + dDT);
   J.moral = clamp(J.moral + (nota >= 6 ? 8 : -10));
-  J.energia = clamp(J.energia - 12); // jugar cansa
+  J.energia = clamp(J.energia - 12);
+  J.dinero += J.salario + P.golesMios * J.primaGol;
 
   pintarRedes();
   irA('p-redes');
 }
 
-// ---------- EL FEED: LA GENTE OPINA ----------
+// ---------- redes sociales ----------
 const HINCHAS = [
   ['Don Próspero', 'donprospero_dt'], ['La Cumbiamba', 'cumbiamba_sur'],
-  ['Hincha de Tribuna', 'tribuna_norte'], ['Marta del Barrio', 'martica_10'],
+  ['Tribuna Norte', 'tribuna_norte'], ['Marta del Barrio', 'martica_10'],
   ['El Pibe Análisis', 'pibe_analisis'], ['Radio La Jugada', 'radiolajugada'],
   ['Comando Verde', 'comandoverde'], ['Doña Fútbol', 'donafutbol']
 ];
-
 const COMENTARIOS = {
   brillante: [
     '¡{n} ES UN CRACK! Ese muchacho nos va a llevar a la gloria 🙌⚽',
@@ -557,8 +812,8 @@ const COMENTARIOS = {
   ],
   bueno: [
     'Buen partido de {n}. Si sigue así, llega lejos.',
-    '{n} cumplió hoy. Sólido el pelado.',
-    'Me gustó {n}, aunque le falta un poquito más de frialdad en el área.'
+    '{n} cumplió. Sólido el pelado del barrio.',
+    'Me gustó {n}, aunque le falta frialdad en la última.'
   ],
   regular: [
     '{n} hoy estuvo desaparecido... ¿alguien lo vio en la cancha?',
@@ -566,56 +821,60 @@ const COMENTARIOS = {
     'A {n} le está quedando grande la camiseta. Ojalá me equivoque.'
   ],
   malo: [
-    '¿{n}? Pésimo. Esas oportunidades NO se fallan a este nivel. 😤',
+    '¿{n}? Pésimo. Esas jugadas NO se desperdician a este nivel. 😤',
     'Que devuelvan la plata. Lo de {n} hoy fue una vergüenza.',
-    '{n} debería pedir disculpas a la hinchada. Así de simple.',
-    'Yo no soy DT pero hasta mi abuela define mejor que {n}.'
+    'Yo no soy DT pero hasta mi abuela define mejor que {n}.',
+    'Maicol Restrepo está calladito en la banca... pero todos pensamos lo mismo.'
   ],
   escandalo: [
     '🚨 VIDEO: {n} de fiesta hasta las 4am a DOS DÍAS del partido. ¿Así quería rendir?',
     '🚨 Filtran fotos de {n} en una farra entre semana. El club "está al tanto".'
+  ],
+  clasicoGloria: [
+    '🔥 {n} ES ETERNO. Gol en el clásico no se olvida NUNCA. Póngale su nombre a la tribuna.',
+    'Mi abuelo vio el clásico del 89. Yo vi a {n} hoy. Estamos a mano. 🔥'
+  ],
+  clasicoVerguenza: [
+    '💔 Perder ASÍ el clásico... {n}, el barrio confió en ti. Qué dolor tan hijuemadre.',
+    'Los de Real Cumbia no nos van a dejar vivir en paz por TU culpa, {n}.'
   ]
 };
 
 function pintarRedes() {
   const r = P.resultado;
   document.getElementById('marcadorFinal').innerHTML =
-    `Mi equipo ${r.golesEquipo} – ${r.golesRival} ${P.rival}<br>
-     <span style="font-size:0.95rem;color:#9aa0a6">Tu calificación: ${r.nota} / 10 · Goles tuyos: ${P.golesMios}</span>`;
+    `Cóndores FC ${r.gf} – ${r.gc} ${P.rival.n}<br>
+     <span style="font-size:0.9rem;color:#9aa0a6">Tu nota: ${r.nota}/10 · Tus goles: ${P.golesMios} · Cobraste $${J.salario + P.golesMios * J.primaGol}M</span>`;
 
   const tono = r.nota >= 8 ? 'brillante' : r.nota >= 6 ? 'bueno' : r.nota >= 4.5 ? 'regular' : 'malo';
   let html = '';
 
-  // El escándalo de la farra sale primero, si te grabaron
-  if (J.escandaloPendiente) {
+  if (J.escandalo) {
     html += post('Chisme Deportivo', 'chismedeportivo', elegir(COMENTARIOS.escandalo), azar(800, 4000), 'escandalo');
-    J.escandaloPendiente = false;
+    J.escandalo = false;
+  }
+  if (r.esClasico) {
+    const lista = r.gano && P.golesMios > 0 ? COMENTARIOS.clasicoGloria
+      : (!r.gano ? COMENTARIOS.clasicoVerguenza : null);
+    if (lista) html += post('La Banda del Clásico', 'bandadelclasico', elegir(lista), azar(3000, 15000), r.gano ? '' : 'escandalo');
   }
 
-  // 3 o 4 opiniones de la gente
   const usados = new Set();
   for (let i = 0; i < azar(3, 4); i++) {
     let h;
     do { h = elegir(HINCHAS); } while (usados.has(h[1]));
     usados.add(h[1]);
-    // Con mala reputación, hasta los buenos partidos reciben algún palo
     let lista = COMENTARIOS[tono];
     if (J.reputacion < 30 && tono !== 'malo' && Math.random() < 0.4) lista = COMENTARIOS.regular;
     html += post(h[0], h[1], elegir(lista), azar(15, 900));
   }
 
-  // El mensaje del club, que es el que de verdad pesa
   let club;
-  if (J.confianzaDT < 25) {
-    club = `Comunicado: el cuerpo técnico evalúa cambios en la titular. El rendimiento de ${J.nombre} "está en observación".`;
-  } else if (r.nota >= 8) {
-    club = `El DT en rueda de prensa: "${J.nombre} es el presente y el futuro de este club. Hoy lo demostró".`;
-  } else if (r.nota < 4.5) {
-    club = `El DT, serio: "Acá nadie tiene el puesto comprado. ${J.nombre} sabe que esto es rendimiento, no nombre".`;
-  } else {
-    club = `El club valora el esfuerzo del equipo. Sobre ${J.nombre}: "va por buen camino, pero puede dar más".`;
-  }
-  html += post('⚽ Club Oficial', 'cluboficial', club, azar(2000, 9000), 'club');
+  if (J.confianzaDT < 25) club = `Comunicado: el cuerpo técnico evalúa darle la titular a Maicol Restrepo. El rendimiento de ${J.nombre} "está en observación".`;
+  else if (r.nota >= 8) club = `Míster Salazar en rueda de prensa: "${J.nombre} es el presente y el futuro de este club. Hoy lo demostró".`;
+  else if (r.nota < 4.5) club = `Míster Salazar, serio: "Acá nadie tiene el puesto comprado. ${J.nombre} lo sabe".`;
+  else club = `El club valora el esfuerzo. Sobre ${J.nombre}: "va por buen camino, pero puede dar más".`;
+  html += post('⚽ Cóndores FC Oficial', 'condoresfc', club, azar(2000, 9000), 'club');
 
   document.getElementById('feed').innerHTML = html;
 }
@@ -624,44 +883,48 @@ function post(autor, arroba, texto, likes, clase = '') {
   return `<div class="post ${clase}">
     <span class="autor">${autor}</span> <span class="arroba">@${arroba}</span>
     <div class="texto">${texto.replaceAll('{n}', J.nombre)}</div>
-    <div class="likes">❤️ ${likes.toLocaleString('es-CO')} · 🔁 ${Math.floor(likes / 4)}</div>
-  </div>`;
+    <div class="likes">❤️ ${likes.toLocaleString('es-CO')} · 🔁 ${Math.floor(likes / 4)}</div></div>`;
 }
 
-// ---------- AVANZAR LA TEMPORADA ----------
+// ---------- avanzar temporada ----------
 function siguienteSemana() {
-  J.partido++;
-
-  // Si el DT perdió la paciencia, la carrera termina antes
+  J.semana++;
   if (J.confianzaDT <= 5) { finTemporada('despedido'); return; }
-  if (J.partido >= TOTAL_PARTIDOS) { finTemporada(); return; }
-
+  if (J.semana >= TOTAL_PARTIDOS) { finTemporada(); return; }
   pintarSemana();
   irA('p-semana');
 }
 
 function finTemporada(forzado) {
+  const pos = posicionLiga();
   let titulo, texto;
   if (forzado === 'despedido') {
     titulo = '📉 Rescindieron tu contrato';
-    texto = `El club no aguantó más. Te vas con ${J.goles} goles y una lección: en el fútbol profesional la paciencia se acaba rápido. La próxima temporada será tu revancha.`;
-  } else if (J.goles >= 12 && J.reputacion >= 70) {
-    titulo = '🌟 ¡TE FICHÓ UN CLUB EUROPEO!';
-    texto = `${J.goles} goles, la hinchada coreando tu nombre y un cazatalentos en la tribuna. ${J.nombre}, te vas para Europa. Del barrio al mundo.`;
-  } else if (J.goles >= 7 && J.confianzaDT >= 50) {
-    titulo = '✅ Renovaste contrato';
-    texto = `Buena temporada: ${J.goles} goles. No fue para Europa todavía, pero el club te quiere y la hinchada empieza a creer. El año entrante puede ser EL año.`;
+    texto = `Míster Salazar le dio la titular a Maicol. Te vas con ${J.goles} goles y $${J.dinero}M en el bolsillo... y con una cuenta pendiente con el fútbol. La próxima temporada es la revancha.`;
+  } else if (pos === 1 && J.goles >= 10) {
+    titulo = '🏆🌟 ¡CAMPEÓN Y FICHADO POR EUROPA!';
+    texto = `Cóndores FC campeón, tú con ${J.goles} goles y un cazatalentos del fútbol europeo esperándote en el camerino. ${J.nombre}, del picadito del barrio a Europa. Tu mamá llora en la tribuna. Ya nadie te va a olvidar.`;
+  } else if (pos === 1) {
+    titulo = '🏆 ¡CAMPEONES!';
+    texto = `¡Cóndores FC se queda con la liga! No fuiste el goleador (${J.goles} goles), pero tienes una estrella en el pecho y el cariño de una ciudad. El año entrante, Europa.`;
+  } else if (pos <= 3 && J.reputacion >= 65) {
+    titulo = '✅ Temporada grande';
+    texto = `Terminaste ${pos}º con ${J.goles} goles y la hinchada coreando tu nombre. El club te renovó subiéndote el sueldo. Estás a UNA temporada del fichaje soñado.`;
+  } else if (J.goles >= 6) {
+    titulo = '😐 Cumpliste, sin brillar';
+    texto = `${pos}º en la liga, ${J.goles} goles. Sobreviviste al fútbol profesional, que no es poco. Pero tú y yo sabemos que el barrio espera más.`;
   } else {
-    titulo = '😐 Temporada para el olvido';
-    texto = `${J.goles} goles. Sobreviviste, pero nadie te recordará por esto. El fútbol da revanchas: entrena más, cuida la energía y no le regales remates al arquero.`;
+    titulo = '😞 Temporada para el olvido';
+    texto = `${pos}º en la liga y solo ${J.goles} goles. Maicol sonríe en la banca. El fútbol da revanchas, pero hay que ganárselas: más forma, mejor energía, decisiones más rápidas en la cancha.`;
   }
+  if (J.comprado.casa) texto += ' Eso sí: tu mamá tiene casa nueva, y eso no te lo quita nadie.';
 
   const record = Number(localStorage.getItem('heroeRecord') || 0);
   if (J.goles > record) localStorage.setItem('heroeRecord', J.goles);
 
   document.getElementById('finalTitulo').textContent = titulo;
   document.getElementById('finalTexto').textContent =
-    texto + ` (Tu récord histórico: ${Math.max(record, J.goles)} goles en una temporada.)`;
+    texto + ` (Récord histórico: ${Math.max(record, J.goles)} goles en una temporada.)`;
   pintarStats('statsFinal');
   irA('p-final');
 }

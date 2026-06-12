@@ -3,20 +3,26 @@
 Dos juegos completos, cada uno en **un solo archivo HTML**, sin motores ni
 librerías. Se abren con doble clic en cualquier navegador.
 
-## ⚽ Héroe del Barrio (`heroe.html`)
+## ⚽ Héroe del Barrio v1 (`heroe.html`)
 
-Prototipo v0 de un simulador de carrera futbolística:
+Carrera de futbolista con partidos jugables en una cancha 2D:
 
-- **Decisiones semanales**: entrenar, descansar o salir de farra. Cada una
-  mueve tu forma, energía y moral — y la farra puede terminar en escándalo.
-- **Partidos jugables**: tus oportunidades de gol se juegan en un minijuego de
-  definición (apuntas dónde rematar y paras la barra de precisión). El arquero
-  mejora cada fecha y **te estudia**: si remates siempre al mismo palo, te lee.
-- **El mundo reacciona**: después de cada partido, la hinchada opina en un feed
-  de redes sociales — te idolatra o te destroza según tu calificación — y el
-  club presiona: si el DT pierde la confianza, te rescinden el contrato.
-- **Finales distintos**: fichaje europeo, renovación, temporada para el olvido
-  o despido, según tus goles, tu reputación y la confianza del DT.
+- **Jugabilidad real**: en cada jugada de ataque controlas a tu jugador en la
+  cancha — arrastras para correr y regatear, los defensas te persiguen con IA
+  (y mejoran cada fecha), tocas un compañero para el pase (te la devuelve
+  cuando te desmarcas) y tocas el arco para rematar contra un arquero que se
+  lanza y te lee.
+- **Historia y personajes**: Don Iván el empresario, tu mamá, Míster Salazar
+  el DT, y Maicol Restrepo, el suplente que quiere tu puesto. Con decisiones:
+  renegociar el contrato a mitad de temporada, y el clásico contra Real Cumbia
+  donde todo vale doble.
+- **Liga de 10 clubes** con tabla de posiciones real que avanza cada fecha.
+- **Plata**: salario semanal, prima por gol, y una tienda (la moto, la cadena,
+  la casa para tu mamá).
+- **El mundo reacciona**: feed de redes sociales que te idolatra o te destroza,
+  presión del club, y despido si el DT pierde la paciencia.
+- **Finales distintos**: campeón y fichado por Europa, renovación, temporada
+  para el olvido o rescisión de contrato.
 
 # Esquiva (`index.html`) — mi primer juego
 
