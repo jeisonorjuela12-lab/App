@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buy Before Flight · Cielo Abierto</title>
+<meta name="description" content="Accesorios premium inspirados en aviación. Arma tu maleta y compra por WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2239; --navy-2:#0E2C49; --sky:#15467A; --sky-2:#1E6FB8;
+  --cloud:#F4F8FC; --card:#FFFFFF;
+  --ink:#0C1B2A; --ink-dim:#5C748C; --ink-faint:#90A6BC;
+  --gold:#E7B84B; --gold-2:#C9A227; --gold-deep:#A9851a;
+  --line:rgba(255,255,255,.12); --line-d:rgba(12,27,42,.10);
+  --green:#25D366; --green-d:#1aa84f;
+  --serif:"Playfair Display",Georgia,serif;
+  --sans:"Montserrat",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cloud);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1300px;margin:0 auto;padding:0 32px}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:60;background:rgba(11,34,57,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);color:#fff}
+.nav__in{max-width:1300px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:19px;font-weight:700;color:#fff}
+.brand .mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#16223a;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700}
+.nav__links{display:flex;gap:26px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.nav__links a:hover{color:var(--gold)}
+.nav__cta{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#06311a;font-weight:600;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:9px 15px;border-radius:8px;transition:.2s}
+.nav__cta:hover{background:var(--green-d);color:#fff}
+@media(max-width:860px){.nav__links{display:none}}
+
+/* HERO */
+.hero{position:relative;color:#fff;background:radial-gradient(120% 120% at 80% 0%,#1E6FB8 0%,#15467A 35%,#0B2239 75%);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 18% 30%,rgba(255,255,255,.10),transparent 9%),
+  radial-gradient(circle at 70% 20%,rgba(255,255,255,.07),transparent 7%),
+  radial-gradient(circle at 40% 70%,rgba(255,255,255,.06),transparent 6%);opacity:.7}
+.contrail{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.5}
+.hero__in{position:relative;z-index:2;max-width:1300px;margin:0 auto;padding:70px 32px 56px;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.tag::before{content:"";width:26px;height:2px;background:var(--gold)}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px,6vw,78px);line-height:1.02;letter-spacing:-.01em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .lede{margin:22px 0 0;max-width:470px;color:rgba(255,255,255,.82);font-size:16px}
+.hero .actions{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:14px 22px;border-radius:11px;cursor:pointer;border:1px solid transparent;transition:.2s}
+.btn-wa{background:var(--green);color:#06311a;font-weight:600}.btn-wa:hover{transform:translateY(-1px);background:#fff}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#16223a;font-weight:600}.btn-gold:hover{transform:translateY(-1px)}
+.hero__card{position:relative;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:22px;backdrop-filter:blur(6px);padding:28px;aspect-ratio:1/1;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.hero__card::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:78%;height:78%;background:radial-gradient(circle,rgba(231,184,75,.35),transparent 65%)}
+.hero__card img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:46px;filter:drop-shadow(0 24px 34px rgba(0,0,0,.4))}
+.hero__pin{position:relative;z-index:2;align-self:flex-start;background:var(--gold);color:#16223a;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:7px 12px;border-radius:999px}
+.hero__price{position:relative;z-index:2;align-self:flex-end;font-family:var(--serif);font-size:30px;color:#fff}
+@media(max-width:860px){.hero__in{grid-template-columns:1fr;padding:44px 32px}.hero__card{aspect-ratio:4/3}}
+
+/* STATS */
+.stats{background:var(--navy);color:#fff}
+.stats__in{max-width:1300px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:26px 24px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat .n{font-family:var(--serif);font-size:40px;color:var(--gold)}
+.stat .l{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
+@media(max-width:760px){.stats__in{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}}
+
+/* SECTION HEAD */
+.shead{padding:60px 0 6px}
+.shead h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4.4vw,52px);line-height:1.05;letter-spacing:-.01em;color:var(--navy)}
+.shead p{margin-top:12px;color:var(--ink-dim);max-width:560px}
+
+/* CAT NAV */
+#bbf-catnav{position:sticky;top:60px;z-index:40;display:flex;gap:9px;flex-wrap:wrap;padding:16px 0;background:rgba(244,248,252,.94);backdrop-filter:blur(8px)}
+.bbf-chip{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:999px;border:1px solid var(--line-d);background:#fff;color:var(--ink-dim);cursor:pointer;transition:.18s}
+.bbf-chip:hover{border-color:var(--sky-2);color:var(--sky)}
+.bbf-chip.is-active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+
+/* CATALOG */
+.bbf-cat{padding:34px 0 8px}
+.bbf-cat__head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-bottom:18px;border-bottom:2px solid var(--line-d);margin-bottom:24px}
+.bbf-cat__num{font-family:var(--mono);font-size:11px;color:var(--sky-2);letter-spacing:.2em}
+.bbf-cat__label{font-family:var(--serif);font-weight:700;font-size:26px;color:var(--navy)}
+.bbf-cat__tag{font-family:var(--serif);font-style:italic;color:var(--ink-dim);font-size:16px}
+.bbf-cat__count{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+.bbf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:1100px){.bbf-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.bbf-grid{grid-template-columns:repeat(2,1fr);gap:14px}}
+
+.bbf-card{background:var(--card);border:1px solid var(--line-d);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.bbf-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px -16px rgba(11,34,57,.4)}
+.bbf-card__media{position:relative;aspect-ratio:1/1;background:radial-gradient(ellipse at 50% 38%,#eef5fb,#dbe8f4);overflow:hidden}
+.bbf-card__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:20px;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.bbf-card:hover .bbf-card__media img{transform:scale(1.07)}
+.bbf-card__ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+.bbf-card__badge{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.92);color:var(--sky);border:1px solid var(--line-d)}
+.bbf-card__badge.is-low{background:#fff1cf;color:#8a6d00;border-color:#f0dca0}
+.bbf-card__badge.is-out{background:#e6edf3;color:var(--ink-faint)}
+.bbf-card__body{padding:16px 16px 18px;display:flex;flex-direction:column;gap:9px;flex:1}
+.bbf-card__name{font-family:var(--serif);font-weight:500;font-size:18px;line-height:1.2;color:var(--navy)}
+.bbf-card__meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+.bbf-card__price{font-family:var(--serif);font-size:21px;color:var(--sky);margin-top:2px}
+.bbf-card__actions{margin-top:auto;display:flex;gap:8px;padding-top:6px}
+.bbf-buy{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:#06311a;font-weight:600;font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;border:none;border-radius:10px;padding:11px 8px;cursor:pointer;transition:.18s}
+.bbf-buy:hover{background:var(--green-d);color:#fff}
+.bbf-buy:disabled{background:#e6edf3;color:var(--ink-faint);cursor:not-allowed}
+.bbf-add{flex:none;width:46px;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#16223a;font-weight:700;font-family:var(--mono);font-size:15px;border:none;border-radius:10px;cursor:pointer;transition:.18s}
+.bbf-add:hover{filter:brightness(1.07)}
+.bbf-card.is-out{opacity:.72}
+
+/* STORY band */
+.band{margin:72px 0 0;background:linear-gradient(120deg,#0B2239,#15467A);color:#fff;border-radius:0}
+.band__in{max-width:1300px;margin:0 auto;padding:64px 32px;display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:center}
+.band blockquote{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,34px);line-height:1.35}
+.band blockquote em{color:var(--gold);font-style:italic}
+.band .attr{margin-top:20px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+@media(max-width:760px){.band__in{grid-template-columns:1fr;padding:40px 32px}}
+
+/* FOOTER */
+.footer{background:var(--navy);color:#fff}
+.footer__in{max-width:1300px;margin:0 auto;padding:54px 32px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px}
+.footer p{color:rgba(255,255,255,.65);font-size:13px;max-width:340px;margin-top:14px}
+.footer h4{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.footer li{list-style:none;color:rgba(255,255,255,.7);font-size:13px;margin-bottom:7px}
+.copy{border-top:1px solid var(--line);padding:18px 32px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+@media(max-width:760px){.footer__in{grid-template-columns:1fr 1fr}}
+
+/* WhatsApp FAB */
+.bbf-wa-fab{position:fixed;right:22px;bottom:22px;z-index:90;width:58px;height:58px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(37,211,102,.5);transition:transform .2s}
+.bbf-wa-fab:hover{transform:scale(1.08)}
+.bbf-wa-fab::after{content:"¿Dudas? Escríbenos";position:absolute;right:70px;white-space:nowrap;background:#fff;color:var(--navy);font-family:var(--mono);font-size:11px;padding:8px 12px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.18);opacity:0;transform:translateX(8px);transition:.2s;pointer-events:none}
+.bbf-wa-fab:hover::after{opacity:1;transform:translateX(0)}
+
+/* CART FAB + DRAWER */
+.bbf-cart-fab{position:fixed;right:22px;bottom:92px;z-index:90;width:58px;height:58px;border-radius:50%;background:var(--navy);color:var(--gold);border:1px solid rgba(231,184,75,.4);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px rgba(11,34,57,.4);transition:transform .2s}
+.bbf-cart-fab:hover{transform:scale(1.08)}
+.bbf-cart-fab.is-pulse{animation:cartpulse .45s ease}
+@keyframes cartpulse{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.bbf-cart-fab__count{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;padding:0 5px;border-radius:999px;background:var(--green);color:#06311a;font-family:var(--mono);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--cloud)}
+.bbf-scrim{position:fixed;inset:0;background:rgba(11,34,57,.5);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.25s;z-index:95}
+.bbf-scrim.is-open{opacity:1;pointer-events:auto}
+.bbf-cart{position:fixed;top:0;right:0;height:100%;width:380px;max-width:90vw;background:#fff;z-index:96;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);box-shadow:-12px 0 40px rgba(11,34,57,.25)}
+.bbf-cart.is-open{transform:none}
+.bbf-cart__head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;background:var(--navy);color:#fff;font-family:var(--serif);font-size:19px}
+.bbf-cart__close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer}
+.bbf-cart__body{flex:1;overflow:auto;padding:14px 18px}
+.bbf-cart__empty{color:var(--ink-dim);font-size:14px;text-align:center;padding:40px 10px}
+.bbf-cart__row{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line-d)}
+.bbf-cart__rowinfo{flex:1;min-width:0}
+.bbf-cart__rowname{display:block;font-family:var(--serif);font-size:15px;color:var(--navy);line-height:1.2}
+.bbf-cart__rowsku{font-family:var(--mono);font-size:10px;color:var(--ink-faint)}
+.bbf-cart__qty{display:flex;align-items:center;gap:8px}
+.bbf-cart__qty button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line-d);background:#fff;cursor:pointer;font-size:14px;color:var(--navy)}
+.bbf-cart__qty span{font-family:var(--mono);font-size:13px;min-width:14px;text-align:center}
+.bbf-cart__rm{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:13px}
+.bbf-cart__foot{padding:18px 22px;border-top:1px solid var(--line-d)}
+.bbf-cart__total{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-dim);margin-bottom:14px}
+.bbf-cart__total b{font-family:var(--serif);font-size:22px;color:var(--navy);text-transform:none;letter-spacing:0}
+.bbf-cart__checkout{width:100%;background:var(--green);color:#06311a;font-weight:600;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:11px;padding:14px;cursor:pointer;transition:.18s}
+.bbf-cart__checkout:hover{background:var(--green-d);color:#fff}
+.bbf-cart__note{font-size:11px;color:var(--ink-faint);text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav__in">
+  <a class="brand" href="#"><span class="mark">BBF</span> Buy Before Flight</a>
+  <div class="nav__links"><a href="#catalogo">Catálogo</a><a href="#historia">Historia</a><a href="#envios">Envíos</a></div>
+  <a class="nav__cta" id="navwa" target="_blank">WhatsApp</a>
+</div></nav>
+
+<header class="hero">
+  <svg class="contrail" viewBox="0 0 1300 600" preserveAspectRatio="none">
+    <path d="M-50 480 Q 400 380 760 230 T 1360 60" fill="none" stroke="rgba(231,184,75,.55)" stroke-width="2" stroke-dasharray="2 7"/>
+    <g transform="translate(760,230) rotate(-22)"><path d="M-10 0 L8 -4 L13 0 L8 4 Z" fill="#E7B84B"/></g>
+  </svg>
+  <div class="hero__in">
+    <div>
+      <div class="tag">Aviación en cada detalle</div>
+      <h1>El cielo, ahora <em>se lleva puesto</em>.</h1>
+      <p class="lede">Accesorios premium inspirados en aviación, nacidos desde la experiencia real de cabina. Arma tu maleta con varias piezas y ciérrala en un toque por WhatsApp.</p>
+      <div class="actions">
+        <a class="btn btn-wa" id="herowa" target="_blank">Comprar por WhatsApp</a>
+        <a class="btn btn-gold" href="#catalogo">Explorar catálogo</a>
+      </div>
+    </div>
+    <div class="hero__card">
+      <span class="hero__pin">Insignia · A320</span>
+      <img src="assets/catalog-imgs/p07-0.png" alt="Pieza destacada BBF">
+      <span class="hero__price">Desde $ 10.000</span>
+    </div>
+  </div>
+</header>
+
+<section class="stats"><div class="stats__in">
+  <div class="stat"><div class="n">56</div><div class="l">Piezas en catálogo</div></div>
+  <div class="stat"><div class="n">10</div><div class="l">Categorías</div></div>
+  <div class="stat"><div class="n">9k</div><div class="l">Tripulantes · seguidores</div></div>
+  <div class="stat"><div class="n">24/7</div><div class="l">Cierre por WhatsApp</div></div>
+</div></section>
+
+<main class="wrap" id="catalogo">
+  <div class="shead">
+    <div class="tag" style="color:var(--gold-deep)">Catálogo 2026</div>
+    <h2>Arma tu maleta de embarque.</h2>
+    <p>Agrega varias piezas con <b>+</b> y envíalas juntas por WhatsApp, o compra una sola al instante con <b>Comprar por WhatsApp</b>.</p>
+  </div>
+  <div id="bbf-catnav"></div>
+  <div id="bbf-catalog"></div>
+</main>
+
+<section class="band" id="historia"><div class="band__in">
+  <div><div class="tag">Historia</div><div style="font-family:var(--serif);font-size:46px;line-height:1;color:var(--gold)">BBF</div></div>
+  <div>
+    <blockquote>"Nació de alguien que <em>vive</em> la aviación, no de una moda. Cada detalle viene de horas reales en cabina — no de un mood board."</blockquote>
+    <div class="attr">Fundadora · BBF · Bogotá</div>
+  </div>
+</div></section>
+
+<footer class="footer" id="envios"><div class="footer__in">
+  <div>
+    <a class="brand" href="#"><span class="mark">BBF</span> Buy Before Flight</a>
+    <p>Accesorios premium inspirados en aviación. Diseñados desde cabina · numerados a mano · enviados a toda Colombia.</p>
+  </div>
+  <div><h4>Catálogo</h4><ul><li>Pines</li><li>Bag tags</li><li>Joyería</li><li>Modelos a escala</li></ul></div>
+  <div><h4>Canales</h4><ul><li>Instagram</li><li>WhatsApp</li><li>Shopify</li><li>Presencial · Bogotá</li></ul></div>
+</div><div class="copy">© 2026 BBF · Bogotá Colombia · Aviación en cada detalle</div></footer>
+
+<script src="assets/catalog-data.js"></script>
+<script src="assets/store-core.js"></script>
+<script>
+  BBF.init({ waNumber:"573000000000", cart:true, waFab:true, quickAdd:true, catNav:true });
+  var w = BBF.waLink("¡Hola BBF! ✈️ Quiero información para comprar una pieza.");
+  document.getElementById("navwa").href = w;
+  document.getElementById("herowa").href = w;
+</script>
+</body>
+</html>
