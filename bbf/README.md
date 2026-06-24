@@ -32,9 +32,10 @@ bbf/
 
 ## Pendiente antes de publicar
 
-1. **Número de WhatsApp.** Hoy está el de ejemplo `573000000000` en cada
-   archivo (en el bloque `<script>` final y en `store-core.js`). Reemplázalo por
-   el número real (formato internacional, sin `+` ni espacios).
+1. **Número de WhatsApp.** ✓ Configurado: `573116545371` (+57 311 654 5371) en
+   las 3 versiones y en `store-core.js`. Para cambiarlo, edita el `waNumber` en
+   el bloque `<script>` final de cada HTML (formato internacional, sin `+` ni
+   espacios).
 2. **Bot de WhatsApp.** Por ahora el botón abre WhatsApp con el pedido ya
    escrito. El siguiente paso es conectar un bot que responda dudas y confirme
    stock. Se monta cuando se elija la versión.
