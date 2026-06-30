@@ -104,8 +104,8 @@ a{color:inherit;text-decoration:none}
 .bbf-buy::before{content:"";width:15px;height:15px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3C9 3 3.5 8.5 3.5 15.5c0 2.4.7 4.7 1.9 6.7L3 29l7-1.8c1.9 1 4 1.6 6 1.6 7 0 12.5-5.5 12.5-12.5S23 3 16 3z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3C9 3 3.5 8.5 3.5 15.5c0 2.4.7 4.7 1.9 6.7L3 29l7-1.8c1.9 1 4 1.6 6 1.6 7 0 12.5-5.5 12.5-12.5S23 3 16 3z'/%3E%3C/svg%3E") center/contain no-repeat}
 .bbf-buy:hover{background:var(--green-d)}
 .bbf-buy:disabled{background:var(--bone-3);color:var(--ink-faint);cursor:not-allowed}
-.bbf-add{background:transparent;border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;border-radius:9px;padding:10px;cursor:pointer;transition:.18s}
-.bbf-add:hover{border-color:var(--gold);color:var(--gold-deep)}
+.bbf-add{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(135deg,var(--gold-soft),var(--gold));color:#1c1608;font-weight:600;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:9px;padding:10px;cursor:pointer;transition:.18s}
+.bbf-add:hover{filter:brightness(1.06);box-shadow:0 6px 16px -7px rgba(201,162,39,.7)}
 .bbf-card.is-out{opacity:.72}
 
 /* ---------- STORY ---------- */
@@ -127,6 +127,35 @@ a{color:inherit;text-decoration:none}
 /* ---------- WhatsApp FAB ---------- */
 .bbf-wa-fab{position:fixed;right:22px;bottom:22px;z-index:90;width:58px;height:58px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(31,168,85,.45);transition:transform .2s}
 .bbf-wa-fab:hover{transform:scale(1.07)}
+
+/* ---------- CARRITO DE MERCADO ---------- */
+.bbf-cart-fab{position:fixed;right:22px;bottom:92px;z-index:90;width:58px;height:58px;border-radius:50%;background:var(--ink);color:var(--gold-soft);border:1px solid rgba(201,162,39,.4);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px rgba(22,21,15,.3);transition:transform .2s}
+.bbf-cart-fab:hover{transform:scale(1.08)}
+.bbf-cart-fab.is-pulse{animation:cartpulse .45s ease}
+@keyframes cartpulse{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.bbf-cart-fab__count{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;padding:0 5px;border-radius:999px;background:var(--green);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bone)}
+.bbf-scrim{position:fixed;inset:0;background:rgba(22,21,15,.42);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.25s;z-index:95}
+.bbf-scrim.is-open{opacity:1;pointer-events:auto}
+.bbf-cart{position:fixed;top:0;right:0;height:100%;width:382px;max-width:90vw;background:var(--bone-2);z-index:96;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);box-shadow:-12px 0 40px rgba(22,21,15,.22)}
+.bbf-cart.is-open{transform:none}
+.bbf-cart__head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;background:var(--ink);color:var(--gold-soft);font-family:var(--serif);font-size:19px}
+.bbf-cart__close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer}
+.bbf-cart__body{flex:1;overflow:auto;padding:14px 18px}
+.bbf-cart__empty{color:var(--ink-dim);font-size:14px;text-align:center;padding:46px 12px}
+.bbf-cart__row{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
+.bbf-cart__rowinfo{flex:1;min-width:0}
+.bbf-cart__rowname{display:block;font-family:var(--serif);font-size:15px;color:var(--ink);line-height:1.2}
+.bbf-cart__rowsku{font-family:var(--mono);font-size:10px;color:var(--ink-faint)}
+.bbf-cart__qty{display:flex;align-items:center;gap:8px}
+.bbf-cart__qty button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:14px;color:var(--ink)}
+.bbf-cart__qty span{font-family:var(--mono);font-size:13px;min-width:14px;text-align:center}
+.bbf-cart__rm{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:13px}
+.bbf-cart__foot{padding:18px 22px;border-top:1px solid var(--line);background:var(--bone-3)}
+.bbf-cart__total{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-dim);margin-bottom:14px}
+.bbf-cart__total b{font-family:var(--serif);font-size:22px;color:var(--gold-deep);text-transform:none;letter-spacing:0}
+.bbf-cart__checkout{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:11px;padding:14px;cursor:pointer;transition:.18s}
+.bbf-cart__checkout:hover{background:var(--green-d)}
+.bbf-cart__note{font-size:11px;color:var(--ink-faint);text-align:center;margin-top:10px}
 </style>
 </head>
 <body>
@@ -167,7 +196,7 @@ a{color:inherit;text-decoration:none}
   <div class="shead">
     <div class="tag">Catálogo 2026</div>
     <h2>Escoge tu pieza. Resáltala.</h2>
-    <p>Filtra por categoría y toca <b>Comprar por WhatsApp</b> — un asesor confirma stock y envío al instante.</p>
+    <p>Filtra por categoría, <b>agrega</b> lo que quieras a tu carrito y ciérralo por WhatsApp — o compra una sola pieza al instante. Un asesor confirma stock y envío.</p>
   </div>
   <div id="bbf-catnav"></div>
   <div id="bbf-catalog"></div>
@@ -192,7 +221,7 @@ a{color:inherit;text-decoration:none}
 <script src="assets/catalog-data.js"></script>
 <script src="assets/store-core.js"></script>
 <script>
-  BBF.init({ waNumber:"573116545371", cart:false, waFab:true, quickAdd:false, catNav:true });
+  BBF.init({ waNumber:"573116545371", cart:true, waFab:true, quickAdd:true, catNav:true });
   // CTAs del hero/nav apuntan a WhatsApp
   var w = BBF.waLink("¡Hola BBF! ✈️ Quiero información para comprar una pieza.");
   document.getElementById("navwa").href = w;
