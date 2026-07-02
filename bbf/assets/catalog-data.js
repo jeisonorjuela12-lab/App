@@ -1,5 +1,5 @@
 /* ============================================================================
-   BBF · Catálogo 2026  (BETA)
+   BBF · Catálogo 2026  ·  V1
    ----------------------------------------------------------------------------
    Reconstruido a partir de las fotos reales en assets/catalog-imgs/.
    Los PRECIOS son SUGERIDOS, basados en los rangos del manual de marca:

@@ -32,7 +32,7 @@ bbf/
 
 ## Pendiente antes de publicar
 
-1. **Número de WhatsApp.** ✓ Configurado: `573116545371` (+57 311 654 5371) en
+1. **Número de WhatsApp.** ✓ Configurado: `573189945406` (+57 318 994 5406) en
    las 3 versiones y en `store-core.js`. Para cambiarlo, edita el `waNumber` en
    el bloque `<script>` final de cada HTML (formato internacional, sin `+` ni
    espacios).

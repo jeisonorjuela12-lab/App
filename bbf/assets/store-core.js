@@ -13,8 +13,8 @@
   // ----- Configuración por defecto (cada versión la sobre-escribe) -----------
   const CFG = {
     // Número de WhatsApp de BBF en formato internacional, SIN + ni espacios.
-    // 57 = Colombia.  (Actual: +57 311 654 5371)
-    waNumber: "573116545371",
+    // 57 = Colombia.  (Actual: +57 318 994 5406)
+    waNumber: "573189945406",
     currency: "COP",
     cart: false,        // ¿mostrar carrito acumulable?
     waFab: true,        // ¿botón flotante de WhatsApp?
