@@ -158,7 +158,9 @@
       stockLbl + "</span>" +
       (p.img
         ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">'
-        : '<div class="bbf-card__ph">' + p.sku + "</div>") +
+        : '<div class="bbf-card__ph"><span class="bbf-card__ph-mark">BBF</span>' +
+          '<span class="bbf-card__ph-txt">Foto en camino</span>' +
+          '<span class="bbf-card__ph-sku">' + p.sku + "</span></div>") +
       "</div>" +
       '<div class="bbf-card__body">' +
       '<h3 class="bbf-card__name">' + p.name + "</h3>" +
