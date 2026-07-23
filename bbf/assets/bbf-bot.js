@@ -112,6 +112,8 @@
 
   function gotoCat(id) {
     close();
+    // en el archivo único: si estamos en la vista Historia, volver al catálogo
+    if (location.hash === "#historia") location.hash = "#catalogo";
     const chip = document.querySelector('#bbf-catnav .bbf-chip[data-cat="' + id + '"]');
     if (chip) chip.click();
     const sec = document.getElementById("cat-" + id) || document.getElementById("catalogo");
